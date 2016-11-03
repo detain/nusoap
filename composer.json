@@ -1,0 +1,19 @@
+{
+    "name": "detain/nusoap",
+    "type": "library",
+    "description": "NuSOAP PHP library re-packaged for Packagist/Composer",
+    "keywords": ["soap","nusoap","api"],
+    "license": "LGPLv2",
+    "authors": [
+        {
+            "name": "Joe Huss",
+            "homepage": "https://my.interserver.net/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "classmap": ["lib/nusoap.php"]
+    }
+}
