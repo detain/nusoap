@@ -772,28 +772,32 @@ class wsdl extends nusoap_base {
 		}
 
 		$b = '
-		<html><head><title>NuSOAP: '.$this->serviceName.'</title>
+		<html><head><title>NuSOAP API ('.$this->serviceName.')</title>
 		<style type="text/css">
 		    body    { font-family: arial; color: #000000; background-color: #ffffff; margin: 0px 0px 0px 0px; }
-		    p       { font-family: arial; color: #000000; margin-top: 0px; margin-bottom: 12px; }
+		    p       { font-family: arial; color: #888; margin-top: 0px; margin-bottom: 12px; }
 		    pre { background-color: silver; padding: 5px; font-family: Courier New; font-size: x-small; color: #000000;}
 		    ul      { margin-top: 10px; margin-left: 20px; }
 		    li      { list-style-type: none; margin-top: 10px; color: #000000; }
+		    .title a, .title a:visited, .nav a, .nav a:visited { 
+			color: white; text-decoration: none; }
+		    a:hover { 
+			background-color: #2467af; }
 		    .content{
 			margin-left: 0px; padding-bottom: 2em; }
 		    .nav {
-			padding-top: 10px; padding-bottom: 10px; padding-left: 15px; font-size: .70em;
-			margin-top: 10px; margin-left: 0px; color: #000000;
-			background-color: #ccccff; width: 20%; margin-left: 20px; margin-top: 20px; }
+			padding-top: 10px; padding-bottom: 10px; padding-left: 15px; font-size: 13px;
+			margin-top: 10px; margin-left: 0px; color: #000000; font-weight: bold;
+			background-color: #393939; width: 35%; margin-left: 20px; margin-top: 20px; }
 		    .title {
 			font-family: arial; font-size: 26px; color: #ffffff;
-			background-color: #999999; width: 100%;
+			background-color: #393939; width: 100%;
 			margin-left: 0px; margin-right: 0px;
 			padding-top: 10px; padding-bottom: 10px;}
 		    .hidden {
 			position: absolute; visibility: hidden; z-index: 200; left: 250px; top: 100px;
 			font-family: arial; overflow: hidden; width: 600;
-			padding: 20px; font-size: 10px; background-color: #999999;
+			padding: 20px; font-size: 10px; background-color: #292929; color: #ccc; border-radius: 15px;
 			layer-background-color:#FFFFFF; }
 		    a,a:active  { color: charcoal; font-weight: bold; }
 		    a:visited   { color: #666666; font-weight: bold; }
@@ -852,17 +856,17 @@ class wsdl extends nusoap_base {
 			<div class=title>'.$this->serviceName.'</div>
 			<div class=nav>
 				<p>' . htmlspecialchars($this->serviceDocumentation, ENT_QUOTES) . '</p>
-				<p>View the <a href="'.$PHP_SELF.'?wsdl">WSDL</a> for the service.
+				<p>View the <a href="'.$PHP_SELF.'?wsdl" style="text-decoration: underline;">WSDL</a> for the service.
 				Click on an operation name to view it&apos;s details.</p>
 				<ul>';
 				foreach($this->getOperations() as $op => $data){
 				    $b .= "<li><a href='#' onclick=\"popout();popup('$op')\">$op</a></li>";
 				    // create hidden div
 				    $b .= "<div id='$op' class='hidden'>
-				    <a href='#' onclick='popout()'><font color='#ffffff'>Close</font></a><br><br>";
+				    <a href='#' onclick='popout()' style='float: right;'><font color='#ffffff'>Close</font></a><br><br>";
 				    foreach($data as $donnie => $marie){ // loop through opdata
 						if($donnie == 'input' || $donnie == 'output'){ // show input/output data
-						    $b .= "<font color='white'>".ucfirst($donnie).':</font><br>';
+						    $b .= "<font color='white'><b>".ucfirst($donnie).'</b>:</font><br>';
 						    foreach($marie as $captain => $tenille){ // loop through data
 								if($captain == 'parts'){ // loop thru parts
 								    $b .= "&nbsp;&nbsp;$captain:<br>";
@@ -876,7 +880,7 @@ class wsdl extends nusoap_base {
 								}
 						    }
 						} else {
-						    $b .= "<font color='white'>".ucfirst($donnie).":</font> $marie<br>";
+						    $b .= "<font color='white'><b>".ucfirst($donnie)."</b>:</font> $marie<br>";
 						}
 				    }
 					$b .= '</div>';
