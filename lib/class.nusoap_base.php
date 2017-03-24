@@ -335,7 +335,7 @@ class nusoap_base {
 	function &getDebugAsXMLComment() {
 		// it would be nice to use a memory stream here to use
 		// memory more efficiently
-		while (strpos($this->debug_str, '--')) {
+		while (mb_strpos($this->debug_str, '--')) {
 			$this->debug_str = str_replace('--', '- -', $this->debug_str);
 		}
 		$ret = "<!--\n" . $this->debug_str . "\n-->";
@@ -685,7 +685,7 @@ class nusoap_base {
 	// if $this->soap_defencoding is UTF-8.  Not doing this automatically allows
 	// one to send arbitrary UTF-8 characters, not just characters that map to ISO-8859-1
 
-	$this->debug("In serializeEnvelope length=" . strlen($body) . " body (max 1000 characters)=" . substr($body, 0, 1000) . " style=$style use=$use encodingStyle=$encodingStyle");
+	$this->debug("In serializeEnvelope length=" . mb_strlen($body) . " body (max 1000 characters)=" . mb_substr($body, 0, 1000) . " style=$style use=$use encodingStyle=$encodingStyle");
 	$this->debug("headers:");
 	$this->appendDebug($this->varDump($headers));
 	$this->debug("namespaces:");
@@ -750,11 +750,11 @@ class nusoap_base {
 	function contractQname($qname){
 		// get element namespace
 		//$this->xdebug("Contract $qname");
-		if (strrpos($qname, ':')) {
+		if (mb_strrpos($qname, ':')) {
 			// get unqualified name
-			$name = substr($qname, strrpos($qname, ':') + 1);
+			$name = mb_substr($qname, mb_strrpos($qname, ':') + 1);
 			// get ns
-			$ns = substr($qname, 0, strrpos($qname, ':'));
+			$ns = mb_substr($qname, 0, mb_strrpos($qname, ':'));
 			$p = $this->getPrefixFromNamespace($ns);
 			if ($p) {
 				return $p . ':' . $name;
@@ -774,11 +774,11 @@ class nusoap_base {
 	*/
 	function expandQname($qname){
 		// get element prefix
-		if(strpos($qname,':') && !preg_match('/^http:\/\//',$qname)){
+		if(mb_strpos($qname,':') && !preg_match('/^http:\/\//',$qname)){
 			// get unqualified name
-			$name = substr(strstr($qname,':'),1);
+			$name = mb_substr(strstr($qname,':'),1);
 			// get ns prefix
-			$prefix = substr($qname,0,strpos($qname,':'));
+			$prefix = mb_substr($qname,0,strpos($qname,':'));
 			if(isset($this->namespaces[$prefix])){
 				return $this->namespaces[$prefix].':'.$name;
 			} else {
@@ -800,7 +800,7 @@ class nusoap_base {
 	function getLocalPart($str){
 		if($sstr = strrchr($str,':')){
 			// get unqualified name
-			return substr( $sstr, 1 );
+			return mb_substr( $sstr, 1 );
 		} else {
 			return $str;
 		}
@@ -815,9 +815,9 @@ class nusoap_base {
 	* @access public
 	*/
 	function getPrefix($str){
-		if($pos = strrpos($str,':')){
+		if($pos = mb_strrpos($str,':')){
 			// get prefix
-			return substr($str,0,$pos);
+			return mb_substr($str,0,$pos);
 		}
 		return false;
 	}
@@ -917,13 +917,13 @@ function timestamp_to_iso8601($timestamp,$utc=true){
 	}
 
 	$datestr = date('Y-m-d\TH:i:sO',$timestamp);
-	$pos = strrpos($datestr, "+");
+	$pos = mb_strrpos($datestr, "+");
 	if ($pos === FALSE) {
-		$pos = strrpos($datestr, "-");
+		$pos = mb_strrpos($datestr, "-");
 	}
 	if ($pos !== FALSE) {
-		if (strlen($datestr) == $pos + 5) {
-			$datestr = substr($datestr, 0, $pos + 3) . ':' . substr($datestr, -2);
+		if (mb_strlen($datestr) == $pos + 5) {
+			$datestr = mb_substr($datestr, 0, $pos + 3) . ':' . mb_substr($datestr, -2);
 		}
 	}
 	return $datestr;
@@ -950,9 +950,9 @@ function iso8601_to_timestamp($datestr){
 	if(preg_match($pattern,$datestr,$regs)){
 		// not utc
 		if($regs[8] != 'Z'){
-			$op = substr($regs[8],0,1);
-			$h = substr($regs[8],1,2);
-			$m = substr($regs[8],strlen($regs[8])-2,2);
+			$op = mb_substr($regs[8],0,1);
+			$h = mb_substr($regs[8],1,2);
+			$m = mb_substr($regs[8],strlen($regs[8])-2,2);
 			if($op == '-'){
 				$regs[4] = $regs[4] + $h;
 				$regs[5] = $regs[5] + $m;

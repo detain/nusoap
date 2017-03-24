@@ -221,7 +221,7 @@ class nusoap_client_mime extends nusoap_client {
 	* @access   private
 	*/
     function parseResponse($headers, $data) {
-		$this->debug('Entering parseResponse() for payload of length ' . strlen($data) . ' and type of ' . $headers['content-type']);
+		$this->debug('Entering parseResponse() for payload of length ' . mb_strlen($data) . ' and type of ' . $headers['content-type']);
 		$this->responseAttachments = array();
 		if (strstr($headers['content-type'], 'multipart/related')) {
 			$this->debug('Decode multipart/related');
@@ -451,7 +451,7 @@ class nusoap_server_mime extends nusoap_server {
 	* @access   private
 	*/
     function parseRequest($headers, $data) {
-		$this->debug('Entering parseRequest() for payload of length ' . strlen($data) . ' and type of ' . $headers['content-type']);
+		$this->debug('Entering parseRequest() for payload of length ' . mb_strlen($data) . ' and type of ' . $headers['content-type']);
 		$this->requestAttachments = array();
 		if (strstr($headers['content-type'], 'multipart/related')) {
 			$this->debug('Decode multipart/related');
