@@ -202,7 +202,7 @@ class nusoap_xmlschema extends nusoap_base  {
 				if(preg_match('/^xmlns/',$k)){
                 	//$this->xdebug("$k: $v");
                 	//$this->xdebug('ns_prefix: '.$this->getPrefix($k));
-                	if($ns_prefix = substr(strrchr($k,':'),1)){
+                	if($ns_prefix = mb_substr(strrchr($k,':'),1)){
                 		//$this->xdebug("Add namespace[$ns_prefix] = $v");
 						$this->namespaces[$ns_prefix] = $v;
 					} else {
@@ -219,8 +219,8 @@ class nusoap_xmlschema extends nusoap_base  {
         	}
         	foreach($attrs as $k => $v){
                 // expand each attribute
-                $k = strpos($k,':') ? $this->expandQname($k) : $k;
-                $v = strpos($v,':') ? $this->expandQname($v) : $v;
+                $k = mb_strpos($k,':') ? $this->expandQname($k) : $k;
+                $v = mb_strpos($v,':') ? $this->expandQname($v) : $v;
         		$eAttrs[$k] = $v;
         	}
         	$attrs = $eAttrs;
@@ -258,7 +258,7 @@ class nusoap_xmlschema extends nusoap_base  {
 				}
             	if (isset($attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'])) {
 					$v = $attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'];
-					if (!strpos($v, ':')) {
+					if (!mb_strpos($v, ':')) {
 						// no namespace in arrayType attribute value...
 						if ($this->defaultNamespace[$pos]) {
 							// ...so use the default
@@ -292,11 +292,11 @@ class nusoap_xmlschema extends nusoap_base  {
 					} else {
 						$v = '';
 					}
-                    if(strpos($v,'[,]')){
+                    if(mb_strpos($v,'[,]')){
                         $this->complexTypes[$this->currentComplexType]['multidimensional'] = true;
                     }
-                    $v = substr($v,0,strpos($v,'[')); // clip the []
-                    if(!strpos($v,':') && isset($this->typemap[$this->XMLSchemaVersion][$v])){
+                    $v = mb_substr($v,0,strpos($v,'[')); // clip the []
+                    if(!mb_strpos($v,':') && isset($this->typemap[$this->XMLSchemaVersion][$v])){
                         $v = $this->XMLSchemaVersion.':'.$v;
                     }
                     $this->complexTypes[$this->currentComplexType]['arrayType'] = $v;
@@ -737,9 +737,9 @@ class nusoap_xmlschema extends nusoap_base  {
     */
 	function getTypeDef($type){
 		//$this->debug("in getTypeDef for type $type");
-		if (substr($type, -1) == '^') {
+		if (mb_substr($type, -1) == '^') {
 			$is_element = 1;
-			$type = substr($type, 0, -1);
+			$type = mb_substr($type, 0, -1);
 		} else {
 			$is_element = 0;
 		}
@@ -752,8 +752,8 @@ class nusoap_xmlschema extends nusoap_base  {
 			if (!isset($this->simpleTypes[$type]['phpType'])) {
 				// get info for type to tack onto the simple type
 				// TODO: can this ever really apply (i.e. what is a simpleType really?)
-				$uqType = substr($this->simpleTypes[$type]['type'], strrpos($this->simpleTypes[$type]['type'], ':') + 1);
-				$ns = substr($this->simpleTypes[$type]['type'], 0, strrpos($this->simpleTypes[$type]['type'], ':'));
+				$uqType = mb_substr($this->simpleTypes[$type]['type'], mb_strrpos($this->simpleTypes[$type]['type'], ':') + 1);
+				$ns = mb_substr($this->simpleTypes[$type]['type'], 0, mb_strrpos($this->simpleTypes[$type]['type'], ':'));
 				$etype = $this->getTypeDef($uqType);
 				if ($etype) {
 					$this->xdebug("in getTypeDef, found type for simpleType $type:");
@@ -771,8 +771,8 @@ class nusoap_xmlschema extends nusoap_base  {
 			$this->xdebug("in getTypeDef, found element $type");
 			if (!isset($this->elements[$type]['phpType'])) {
 				// get info for type to tack onto the element
-				$uqType = substr($this->elements[$type]['type'], strrpos($this->elements[$type]['type'], ':') + 1);
-				$ns = substr($this->elements[$type]['type'], 0, strrpos($this->elements[$type]['type'], ':'));
+				$uqType = mb_substr($this->elements[$type]['type'], mb_strrpos($this->elements[$type]['type'], ':') + 1);
+				$ns = mb_substr($this->elements[$type]['type'], 0, mb_strrpos($this->elements[$type]['type'], ':'));
 				$etype = $this->getTypeDef($uqType);
 				if ($etype) {
 					$this->xdebug("in getTypeDef, found type for element $type:");

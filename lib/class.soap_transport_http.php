@@ -426,7 +426,7 @@ class soap_transport_http extends nusoap_base {
 	*/
 	function send($data, $timeout=0, $response_timeout=30, $cookies=NULL) {
 		
-		$this->debug('entered send() with data of length: '.strlen($data));
+		$this->debug('entered send() with data of length: '.mb_strlen($data));
 
 		$this->tryagain = true;
 		$tries = 0;
@@ -630,7 +630,7 @@ class soap_transport_http extends nusoap_base {
 								'HTTP/1.1 200 Connection established',
 								'HTTP/1.1 307');
 		foreach ($skipHeaders as $hd) {
-			$prefix = substr($data, 0, strlen($hd));
+			$prefix = mb_substr($data, 0, mb_strlen($hd));
 			if ($prefix == $hd) return true;
 		}
 
@@ -654,42 +654,42 @@ class soap_transport_http extends nusoap_base {
 		
 		// read chunk-size, chunk-extension (if any) and CRLF
 		// get the position of the linebreak
-		$chunkend = strpos($buffer, $lb);
+		$chunkend = mb_strpos($buffer, $lb);
 		if ($chunkend == FALSE) {
 			$this->debug('no linebreak found in decodeChunked');
 			return $new;
 		}
-		$temp = substr($buffer,0,$chunkend);
+		$temp = mb_substr($buffer,0,$chunkend);
 		$chunk_size = hexdec( trim($temp) );
-		$chunkstart = $chunkend + strlen($lb);
+		$chunkstart = $chunkend + mb_strlen($lb);
 		// while (chunk-size > 0) {
 		while ($chunk_size > 0) {
 			$this->debug("chunkstart: $chunkstart chunk_size: $chunk_size");
-			$chunkend = strpos( $buffer, $lb, $chunkstart + $chunk_size);
+			$chunkend = mb_strpos( $buffer, $lb, $chunkstart + $chunk_size);
 		  	
 			// Just in case we got a broken connection
 		  	if ($chunkend == FALSE) {
-		  	    $chunk = substr($buffer,$chunkstart);
+		  	    $chunk = mb_substr($buffer,$chunkstart);
 				// append chunk-data to entity-body
 		    	$new .= $chunk;
-		  	    $length += strlen($chunk);
+		  	    $length += mb_strlen($chunk);
 		  	    break;
 			}
 			
 		  	// read chunk-data and CRLF
-		  	$chunk = substr($buffer,$chunkstart,$chunkend-$chunkstart);
+		  	$chunk = mb_substr($buffer,$chunkstart,$chunkend-$chunkstart);
 		  	// append chunk-data to entity-body
 		  	$new .= $chunk;
 		  	// length := length + chunk-size
-		  	$length += strlen($chunk);
+		  	$length += mb_strlen($chunk);
 		  	// read chunk-size and CRLF
-		  	$chunkstart = $chunkend + strlen($lb);
+		  	$chunkstart = $chunkend + mb_strlen($lb);
 			
-		  	$chunkend = strpos($buffer, $lb, $chunkstart) + strlen($lb);
+		  	$chunkend = mb_strpos($buffer, $lb, $chunkstart) + mb_strlen($lb);
 			if ($chunkend == FALSE) {
 				break; //Just in case we got a broken connection
 			}
-			$temp = substr($buffer,$chunkstart,$chunkend-$chunkstart);
+			$temp = mb_substr($buffer,$chunkstart,$chunkend-$chunkstart);
 			$chunk_size = hexdec( trim($temp) );
 			$chunkstart = $chunkend;
 		}
@@ -711,7 +711,7 @@ class soap_transport_http extends nusoap_base {
 
 		// add content-length header
 		if ($this->request_method != 'GET') {
-			$this->setHeader('Content-Length', strlen($data));
+			$this->setHeader('Content-Length', mb_strlen($data));
 		}
 
 		// start building outgoing payload:
@@ -762,12 +762,12 @@ class soap_transport_http extends nusoap_base {
 
 	  if ($this->io_method() == 'socket') {
 		// send payload
-		if(!fputs($this->fp, $this->outgoing_payload, strlen($this->outgoing_payload))) {
+		if(!fputs($this->fp, $this->outgoing_payload, mb_strlen($this->outgoing_payload))) {
 			$this->setError('couldn\'t write message data to socket');
 			$this->debug('couldn\'t write message data to socket');
 			return false;
 		}
-		$this->debug('wrote data to socket, length = ' . strlen($this->outgoing_payload));
+		$this->debug('wrote data to socket, length = ' . mb_strlen($this->outgoing_payload));
 		return true;
 	  } else if ($this->io_method() == 'curl') {
 		// set payload
@@ -821,30 +821,30 @@ class soap_transport_http extends nusoap_base {
 			// We might EOF during header read.
 			if(feof($this->fp)) {
 				$this->incoming_payload = $data;
-				$this->debug('found no headers before EOF after length ' . strlen($data));
+				$this->debug('found no headers before EOF after length ' . mb_strlen($data));
 				$this->debug("received before EOF:\n" . $data);
 				$this->setError('server failed to send headers');
 				return false;
 			}
 
 			$tmp = fgets($this->fp, 256);
-			$tmplen = strlen($tmp);
+			$tmplen = mb_strlen($tmp);
 			$this->debug("read line of $tmplen bytes: " . trim($tmp));
 
 			if ($tmplen == 0) {
 				$this->incoming_payload = $data;
-				$this->debug('socket read of headers timed out after length ' . strlen($data));
+				$this->debug('socket read of headers timed out after length ' . mb_strlen($data));
 				$this->debug("read before timeout: " . $data);
 				$this->setError('socket read of headers timed out');
 				return false;
 			}
 
 			$data .= $tmp;
-			$pos = strpos($data,"\r\n\r\n");
+			$pos = mb_strpos($data,"\r\n\r\n");
 			if($pos > 1){
 				$lb = "\r\n";
 			} else {
-				$pos = strpos($data,"\n\n");
+				$pos = mb_strpos($data,"\n\n");
 				if($pos > 1){
 					$lb = "\n";
 				}
@@ -857,9 +857,9 @@ class soap_transport_http extends nusoap_base {
 		}
 		// store header data
 		$this->incoming_payload .= $data;
-		$this->debug('found end of headers after length ' . strlen($data));
+		$this->debug('found end of headers after length ' . mb_strlen($data));
 		// process headers
-		$header_data = trim(substr($data,0,$pos));
+		$header_data = trim(mb_substr($data,0,$pos));
 		$header_array = explode($lb,$header_data);
 		$this->incoming_headers = array();
 		$this->incoming_cookies = array();
@@ -902,11 +902,11 @@ class soap_transport_http extends nusoap_base {
 		do {
 			if ($chunked) {
 				$tmp = fgets($this->fp, 256);
-				$tmplen = strlen($tmp);
+				$tmplen = mb_strlen($tmp);
 				$this->debug("read chunk line of $tmplen bytes");
 				if ($tmplen == 0) {
 					$this->incoming_payload = $data;
-					$this->debug('socket read of chunk length timed out after length ' . strlen($data));
+					$this->debug('socket read of chunk length timed out after length ' . mb_strlen($data));
 					$this->debug("read before timeout:\n" . $data);
 					$this->setError('socket read of chunk length timed out');
 					return false;
@@ -918,11 +918,11 @@ class soap_transport_http extends nusoap_base {
 		    while (($strlen < $content_length) && (!feof($this->fp))) {
 		    	$readlen = min(8192, $content_length - $strlen);
 				$tmp = fread($this->fp, $readlen);
-				$tmplen = strlen($tmp);
+				$tmplen = mb_strlen($tmp);
 				$this->debug("read buffer of $tmplen bytes");
 				if (($tmplen == 0) && (!feof($this->fp))) {
 					$this->incoming_payload = $data;
-					$this->debug('socket read of body timed out after length ' . strlen($data));
+					$this->debug('socket read of body timed out after length ' . mb_strlen($data));
 					$this->debug("read before timeout:\n" . $data);
 					$this->setError('socket read of body timed out');
 					return false;
@@ -932,11 +932,11 @@ class soap_transport_http extends nusoap_base {
 			}
 			if ($chunked && ($content_length > 0)) {
 				$tmp = fgets($this->fp, 256);
-				$tmplen = strlen($tmp);
+				$tmplen = mb_strlen($tmp);
 				$this->debug("read chunk terminator of $tmplen bytes");
 				if ($tmplen == 0) {
 					$this->incoming_payload = $data;
-					$this->debug('socket read of chunk terminator timed out after length ' . strlen($data));
+					$this->debug('socket read of chunk terminator timed out after length ' . mb_strlen($data));
 					$this->debug("read before timeout:\n" . $data);
 					$this->setError('socket read of chunk terminator timed out');
 					return false;
@@ -946,9 +946,9 @@ class soap_transport_http extends nusoap_base {
 		if (feof($this->fp)) {
 			$this->debug('read to EOF');
 		}
-		$this->debug('read body of length ' . strlen($data));
+		$this->debug('read body of length ' . mb_strlen($data));
 		$this->incoming_payload .= $data;
-		$this->debug('received a total of '.strlen($this->incoming_payload).' bytes of data from server');
+		$this->debug('received a total of '.mb_strlen($this->incoming_payload).' bytes of data from server');
 		
 		// close filepointer
 		if(
@@ -1006,10 +1006,10 @@ class soap_transport_http extends nusoap_base {
 		$savedata = $data;
 		while ($this->isSkippableCurlHeader($data)) {
 			$this->debug("Found HTTP header to skip");
-			if ($pos = strpos($data,"\r\n\r\n")) {
-				$data = ltrim(substr($data,$pos));
-			} elseif($pos = strpos($data,"\n\n") ) {
-				$data = ltrim(substr($data,$pos));
+			if ($pos = mb_strpos($data,"\r\n\r\n")) {
+				$data = ltrim(mb_substr($data,$pos));
+			} elseif($pos = mb_strpos($data,"\n\n") ) {
+				$data = ltrim(mb_substr($data,$pos));
 			}
 		}
 
@@ -1017,29 +1017,29 @@ class soap_transport_http extends nusoap_base {
 			// have nothing left; just remove 100 header(s)
 			$data = $savedata;
 			while (preg_match('/^HTTP\/1.1 100/',$data)) {
-				if ($pos = strpos($data,"\r\n\r\n")) {
-					$data = ltrim(substr($data,$pos));
-				} elseif($pos = strpos($data,"\n\n") ) {
-					$data = ltrim(substr($data,$pos));
+				if ($pos = mb_strpos($data,"\r\n\r\n")) {
+					$data = ltrim(mb_substr($data,$pos));
+				} elseif($pos = mb_strpos($data,"\n\n") ) {
+					$data = ltrim(mb_substr($data,$pos));
 				}
 			}
 		}
 		
 		// separate content from HTTP headers
-		if ($pos = strpos($data,"\r\n\r\n")) {
+		if ($pos = mb_strpos($data,"\r\n\r\n")) {
 			$lb = "\r\n";
-		} elseif( $pos = strpos($data,"\n\n")) {
+		} elseif( $pos = mb_strpos($data,"\n\n")) {
 			$lb = "\n";
 		} else {
 			$this->debug('no proper separation of headers and document');
 			$this->setError('no proper separation of headers and document');
 			return false;
 		}
-		$header_data = trim(substr($data,0,$pos));
+		$header_data = trim(mb_substr($data,0,$pos));
 		$header_array = explode($lb,$header_data);
-		$data = ltrim(substr($data,$pos));
+		$data = ltrim(mb_substr($data,$pos));
 		$this->debug('found proper separation of headers and document');
-		$this->debug('cleaned data, stringlen: '.strlen($data));
+		$this->debug('cleaned data, stringlen: '.mb_strlen($data));
 		// clean headers
 		foreach ($header_array as $header_line) {
 			$arr = explode(':',$header_line,2);
@@ -1127,17 +1127,17 @@ class soap_transport_http extends nusoap_base {
 					// IIS 5 requires gzinflate instead of gzuncompress (similar to IE 5 and gzdeflate v. gzcompress)
 					// this means there are no Zlib headers, although there should be
 					$this->debug('The gzinflate function exists');
-					$datalen = strlen($data);
+					$datalen = mb_strlen($data);
 					if ($this->incoming_headers['content-encoding'] == 'deflate') {
 						if ($degzdata = @gzinflate($data)) {
 	    					$data = $degzdata;
-	    					$this->debug('The payload has been inflated to ' . strlen($data) . ' bytes');
-	    					if (strlen($data) < $datalen) {
+	    					$this->debug('The payload has been inflated to ' . mb_strlen($data) . ' bytes');
+	    					if (mb_strlen($data) < $datalen) {
 	    						// test for the case that the payload has been compressed twice
 		    					$this->debug('The inflated payload is smaller than the gzipped one; try again');
 								if ($degzdata = @gzinflate($data)) {
 			    					$data = $degzdata;
-			    					$this->debug('The payload has been inflated again to ' . strlen($data) . ' bytes');
+			    					$this->debug('The payload has been inflated again to ' . mb_strlen($data) . ' bytes');
 								}
 	    					}
 	    				} else {
@@ -1145,15 +1145,15 @@ class soap_transport_http extends nusoap_base {
 	    					$this->setError('Error using gzinflate to inflate the payload');
 	    				}
 					} elseif ($this->incoming_headers['content-encoding'] == 'gzip') {
-						if ($degzdata = @gzinflate(substr($data, 10))) {	// do our best
+						if ($degzdata = @gzinflate(mb_substr($data, 10))) {	// do our best
 							$data = $degzdata;
-	    					$this->debug('The payload has been un-gzipped to ' . strlen($data) . ' bytes');
-	    					if (strlen($data) < $datalen) {
+	    					$this->debug('The payload has been un-gzipped to ' . mb_strlen($data) . ' bytes');
+	    					if (mb_strlen($data) < $datalen) {
 	    						// test for the case that the payload has been compressed twice
 		    					$this->debug('The un-gzipped payload is smaller than the gzipped one; try again');
-								if ($degzdata = @gzinflate(substr($data, 10))) {
+								if ($degzdata = @gzinflate(mb_substr($data, 10))) {
 			    					$data = $degzdata;
-			    					$this->debug('The payload has been un-gzipped again to ' . strlen($data) . ' bytes');
+			    					$this->debug('The payload has been un-gzipped again to ' . mb_strlen($data) . ' bytes');
 								}
 	    					}
 	    				} else {
@@ -1177,7 +1177,7 @@ class soap_transport_http extends nusoap_base {
 			$this->debug('No Content-Encoding header');
 		}
 		
-		if(strlen($data) == 0){
+		if(mb_strlen($data) == 0){
 			$this->debug('no data after headers!');
 			$this->setError('no data present after HTTP headers');
 			return false;
@@ -1229,44 +1229,44 @@ class soap_transport_http extends nusoap_base {
 		$value_str = $data[0];
 
 		$cookie_param = 'domain=';
-		$start = strpos($cookie_str, $cookie_param);
+		$start = mb_strpos($cookie_str, $cookie_param);
 		if ($start > 0) {
-			$domain = substr($cookie_str, $start + strlen($cookie_param));
-			$domain = substr($domain, 0, strpos($domain, ';'));
+			$domain = mb_substr($cookie_str, $start + mb_strlen($cookie_param));
+			$domain = mb_substr($domain, 0, mb_strpos($domain, ';'));
 		} else {
 			$domain = '';
 		}
 
 		$cookie_param = 'expires=';
-		$start = strpos($cookie_str, $cookie_param);
+		$start = mb_strpos($cookie_str, $cookie_param);
 		if ($start > 0) {
-			$expires = substr($cookie_str, $start + strlen($cookie_param));
-			$expires = substr($expires, 0, strpos($expires, ';'));
+			$expires = mb_substr($cookie_str, $start + mb_strlen($cookie_param));
+			$expires = mb_substr($expires, 0, mb_strpos($expires, ';'));
 		} else {
 			$expires = '';
 		}
 
 		$cookie_param = 'path=';
-		$start = strpos($cookie_str, $cookie_param);
+		$start = mb_strpos($cookie_str, $cookie_param);
 		if ( $start > 0 ) {
-			$path = substr($cookie_str, $start + strlen($cookie_param));
-			$path = substr($path, 0, strpos($path, ';'));
+			$path = mb_substr($cookie_str, $start + mb_strlen($cookie_param));
+			$path = mb_substr($path, 0, mb_strpos($path, ';'));
 		} else {
 			$path = '/';
 		}
 						
 		$cookie_param = ';secure;';
-		if (strpos($cookie_str, $cookie_param) !== FALSE) {
+		if (mb_strpos($cookie_str, $cookie_param) !== FALSE) {
 			$secure = true;
 		} else {
 			$secure = false;
 		}
 
-		$sep_pos = strpos($value_str, '=');
+		$sep_pos = mb_strpos($value_str, '=');
 
 		if ($sep_pos) {
-			$name = substr($value_str, 0, $sep_pos);
-			$value = substr($value_str, $sep_pos + 1);
+			$name = mb_substr($value_str, 0, $sep_pos);
+			$value = mb_substr($value_str, $sep_pos + 1);
 			$cookie= array(	'name' => $name,
 			                'value' => $value,
 							'domain' => $domain,

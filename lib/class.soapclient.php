@@ -310,7 +310,7 @@ class nusoap_client extends nusoap_base  {
 		// serialize envelope
 		$soapmsg = $this->serializeEnvelope($payload,$this->requestHeaders,$usedNamespaces,$style,$use,$encodingStyle);
 		$this->debug("endpoint=$this->endpoint, soapAction=$soapAction, namespace=$namespace, style=$style, use=$use, encodingStyle=$encodingStyle");
-		$this->debug('SOAP message length=' . strlen($soapmsg) . ' contents (max 1000 bytes)=' . substr($soapmsg, 0, 1000));
+		$this->debug('SOAP message length=' . mb_strlen($soapmsg) . ' contents (max 1000 bytes)=' . mb_substr($soapmsg, 0, 1000));
 		// send
 		$return = $this->send($this->getHTTPBody($soapmsg),$soapAction,$this->timeout,$this->response_timeout);
 		if($errstr = $this->getError()){
@@ -465,12 +465,12 @@ class nusoap_client extends nusoap_base  {
 				if($this->http_encoding != ''){
 					$http->setEncoding($this->http_encoding);
 				}
-				$this->debug('sending message, length='.strlen($msg));
+				$this->debug('sending message, length='.mb_strlen($msg));
 				if(preg_match('/^http:/',$this->endpoint)){
-				//if(strpos($this->endpoint,'http:')){
+				//if(mb_strpos($this->endpoint,'http:')){
 					$this->responseData = $http->send($msg,$timeout,$response_timeout,$this->cookies);
 				} elseif(preg_match('/^https/',$this->endpoint)){
-				//} elseif(strpos($this->endpoint,'https:')){
+				//} elseif(mb_strpos($this->endpoint,'https:')){
 					//if(phpversion() == '4.3.0-dev'){
 						//$response = $http->send($msg,$timeout,$response_timeout);
 						//$this->request = $http->outgoing_payload;
@@ -499,7 +499,7 @@ class nusoap_client extends nusoap_base  {
 				} elseif($this->getError()){
 					return false;
 				} else {
-					$this->debug('got response, length='. strlen($this->responseData).' type='.$http->incoming_headers['content-type']);
+					$this->debug('got response, length='. mb_strlen($this->responseData).' type='.$http->incoming_headers['content-type']);
 					return $this->parseResponse($http->incoming_headers, $this->responseData);
 				}
 			break;
@@ -519,7 +519,7 @@ class nusoap_client extends nusoap_base  {
 	* @access   private
 	*/
 	function parseResponse($headers, $data) {
-		$this->debug('Entering parseResponse() for data of length ' . strlen($data) . ' headers:');
+		$this->debug('Entering parseResponse() for data of length ' . mb_strlen($data) . ' headers:');
 		$this->appendDebug($this->varDump($headers));
 		if (!isset($headers['content-type'])) {
 			$this->setError('Response not of type text/xml (no content-type header)');
@@ -529,11 +529,11 @@ class nusoap_client extends nusoap_base  {
 			$this->setError('Response not of type text/xml: ' . $headers['content-type']);
 			return false;
 		}
-		if (strpos($headers['content-type'], '=')) {
-			$enc = str_replace('"', '', substr(strstr($headers["content-type"], '='), 1));
+		if (mb_strpos($headers['content-type'], '=')) {
+			$enc = str_replace('"', '', mb_substr(strstr($headers["content-type"], '='), 1));
 			$this->debug('Got response encoding: ' . $enc);
 			if(preg_match('/^(ISO-8859-1|US-ASCII|UTF-8)$/i',$enc)){
-				$this->xml_encoding = strtoupper($enc);
+				$this->xml_encoding = mb_strtoupper($enc);
 			} else {
 				$this->xml_encoding = 'US-ASCII';
 			}
@@ -802,9 +802,9 @@ class nusoap_client extends nusoap_base  {
 						$paramArrayStr .= "'$name' => \$$name, ";
 						$paramCommentStr .= "$type \$$name, ";
 					}
-					$paramStr = substr($paramStr, 0, strlen($paramStr)-2);
-					$paramArrayStr = substr($paramArrayStr, 0, strlen($paramArrayStr)-2);
-					$paramCommentStr = substr($paramCommentStr, 0, strlen($paramCommentStr)-2);
+					$paramStr = mb_substr($paramStr, 0, mb_strlen($paramStr)-2);
+					$paramArrayStr = mb_substr($paramArrayStr, 0, mb_strlen($paramArrayStr)-2);
+					$paramCommentStr = mb_substr($paramCommentStr, 0, mb_strlen($paramCommentStr)-2);
 				} else {
 					$paramStr = '';
 					$paramArrayStr = '';
@@ -894,7 +894,7 @@ class nusoap_client extends nusoap_base  {
 	 * @access	public
 	 */
 	function setCookie($name, $value) {
-		if (strlen($name) == 0) {
+		if (mb_strlen($name) == 0) {
 			return false;
 		}
 		$this->cookies[] = array('name' => $name, 'value' => $value);

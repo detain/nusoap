@@ -67,15 +67,15 @@ class nusoap_parser extends nusoap_base {
 		// Check whether content has been read.
 		if(!empty($xml)){
 			// Check XML encoding
-			$pos_xml = strpos($xml, '<?xml');
+			$pos_xml = mb_strpos($xml, '<?xml');
 			if ($pos_xml !== FALSE) {
-				$xml_decl = substr($xml, $pos_xml, strpos($xml, '?>', $pos_xml + 2) - $pos_xml + 1);
+				$xml_decl = mb_substr($xml, $pos_xml, mb_strpos($xml, '?>', $pos_xml + 2) - $pos_xml + 1);
 				if (preg_match("/encoding=[\"']([^\"']*)[\"']/", $xml_decl, $res)) {
 					$xml_encoding = $res[1];
-					if (strtoupper($xml_encoding) != $encoding) {
+					if (mb_strtoupper($xml_encoding) != $encoding) {
 						$err = "Charset from HTTP Content-Type '" . $encoding . "' does not match encoding from XML declaration '" . $xml_encoding . "'";
 						$this->debug($err);
-						if ($encoding != 'ISO-8859-1' || strtoupper($xml_encoding) != 'UTF-8') {
+						if ($encoding != 'ISO-8859-1' || mb_strtoupper($xml_encoding) != 'UTF-8') {
 							$this->setError($err);
 							return;
 						}
@@ -85,14 +85,14 @@ class nusoap_parser extends nusoap_base {
 					}
 				} else {
 					$this->debug('No encoding specified in XML declaration');
-					$pos_end = strpos($xml, '?>', $pos_xml + 2);
-					$xml = substr($xml, 0, $pos_end)  . " encoding=\"$encoding\"" . substr($xml, $pos_end);
+					$pos_end = mb_strpos($xml, '?>', $pos_xml + 2);
+					$xml = mb_substr($xml, 0, $pos_end)  . " encoding=\"$encoding\"" . mb_substr($xml, $pos_end);
 				}
 			} else {
 				$this->debug('No XML declaration');
 				$xml = "<?xml version=\"1.0\" encoding=\"$encoding\"?>" . $xml;
 			}
-			$this->debug('Entering nusoap_parser(), length='.strlen($xml).', encoding='.$encoding);
+			$this->debug('Entering nusoap_parser(), length='.mb_strlen($xml).', encoding='.$encoding);
 			// Create an XML parser - why not xml_parser_create_ns?
 			$this->parser = xml_parser_create($this->xml_encoding);
 			// Set the options for parsing the XML data.
@@ -175,11 +175,11 @@ class nusoap_parser extends nusoap_base {
 		// set self as current value for this depth
 		$this->depth_array[$this->depth] = $pos;
 		// get element prefix
-		if(strpos($name,':')){
+		if(mb_strpos($name,':')){
 			// get ns prefix
-			$prefix = substr($name,0,strpos($name,':'));
+			$prefix = mb_substr($name,0,strpos($name,':'));
 			// get unqualified name
-			$name = substr(strstr($name,':'),1);
+			$name = mb_substr(strstr($name,':'),1);
 		}
 		// set status
 		if ($name == 'Envelope' && $this->status == '') {
@@ -314,11 +314,11 @@ class nusoap_parser extends nusoap_base {
 		$pos = $this->depth_array[$this->depth--];
 
         // get element prefix
-		if(strpos($name,':')){
+		if(mb_strpos($name,':')){
 			// get ns prefix
-			$prefix = substr($name,0,strpos($name,':'));
+			$prefix = mb_substr($name,0,strpos($name,':'));
 			// get unqualified name
-			$name = substr(strstr($name,':'),1);
+			$name = mb_substr(strstr($name,':'),1);
 		}
 		
 		// build to native type
@@ -326,7 +326,7 @@ class nusoap_parser extends nusoap_base {
 			// deal w/ multirefs
 			if(isset($this->message[$pos]['attrs']['href'])){
 				// get id
-				$id = substr($this->message[$pos]['attrs']['href'],1);
+				$id = mb_substr($this->message[$pos]['attrs']['href'],1);
 				// add placeholder to href array
 				$this->multirefs[$id][$pos] = 'placeholder';
 				// add set a reference to it as the result value

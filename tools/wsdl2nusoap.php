@@ -326,8 +326,8 @@ class wsdl2nusoap extends nusoap_base {
 								$paramArrayStr .= "'$name' => \$$name, ";
 								$paramCommentStr .= "\t *\t\t\t$type \$$name\n";
 							}
-							$paramStr = substr($paramStr, 0, strlen($paramStr)-2);
-							$paramArrayStr = substr($paramArrayStr, 0, strlen($paramArrayStr)-2);
+							$paramStr = mb_substr($paramStr, 0, mb_strlen($paramStr)-2);
+							$paramArrayStr = mb_substr($paramArrayStr, 0, mb_strlen($paramArrayStr)-2);
 						} else {
 							$paramStr = '';
 							$paramArrayStr = '';
