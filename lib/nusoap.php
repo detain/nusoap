@@ -3729,7 +3729,7 @@ class nusoap_server extends nusoap_base {
 	/**
 	* processes request and returns response
 	*
-	* @param    string $data usually is the value of $HTTP_RAW_POST_DATA
+	* @param    string $data usually is the value of php://input
 	* @access   public
 	*/
 	function service($data){

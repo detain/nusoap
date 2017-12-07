@@ -85,7 +85,7 @@ class nusoap_server extends nusoap_base {
 	 * @var boolean
 	 * @access public
 	 */
-    var $decode_utf8 = true;
+	var $decode_utf8 = true;
 
 	/**
 	 * HTTP headers of response
@@ -177,9 +177,9 @@ class nusoap_server extends nusoap_base {
 
 	/**
 	* constructor
-    * the optional parameter is a path to a WSDL file that you'd like to bind the server instance to.
+	* the optional parameter is a path to a WSDL file that you'd like to bind the server instance to.
 	*
-    * @param mixed $wsdl file path or URL (string), or wsdl instance (object)
+	* @param mixed $wsdl file path or URL (string), or wsdl instance (object)
 	* @access   public
 	*/
 	function __construct($wsdl=false){
@@ -242,7 +242,7 @@ class nusoap_server extends nusoap_base {
 	/**
 	* processes request and returns response
 	*
-	* @param    string $data usually is the value of $HTTP_RAW_POST_DATA
+	* @param    string $data usually is the value of php://input
 	* @access   public
 	*/
 	function service($data){
@@ -278,21 +278,21 @@ class nusoap_server extends nusoap_base {
 		} elseif (preg_match('/wsdl/', $qs) ){
 			$this->debug("In service, this is a request for WSDL");
 			if ($this->externalWSDLURL){
-              if (mb_strpos($this->externalWSDLURL, "http://") !== false) { // assume URL
+			  if (mb_strpos($this->externalWSDLURL, "http://") !== false) { // assume URL
 				$this->debug("In service, re-direct for WSDL");
 				header('Location: '.$this->externalWSDLURL);
-              } else { // assume file
+			  } else { // assume file
 				$this->debug("In service, use file passthru for WSDL");
-                header("Content-Type: text/xml\r\n");
+				header("Content-Type: text/xml\r\n");
 				$pos = mb_strpos($this->externalWSDLURL, "file://");
 				if ($pos === false) {
 					$filename = $this->externalWSDLURL;
 				} else {
 					$filename = mb_substr($this->externalWSDLURL, $pos + 7);
 				}
-                $fp = fopen($this->externalWSDLURL, 'r');
-                fpassthru($fp);
-              }
+				$fp = fopen($this->externalWSDLURL, 'r');
+				fpassthru($fp);
+			  }
 			} elseif ($this->wsdl) {
 				$this->debug("In service, serialize WSDL");
 				header("Content-Type: text/xml; charset=ISO-8859-1\r\n");
@@ -463,7 +463,7 @@ class nusoap_server extends nusoap_base {
 		if (isset($this->headers['content-encoding']) && $this->headers['content-encoding'] != '') {
 			$this->debug('got content encoding: ' . $this->headers['content-encoding']);
 			if ($this->headers['content-encoding'] == 'deflate' || $this->headers['content-encoding'] == 'gzip') {
-		    	// if decoding works, use it. else assume data wasn't gzencoded
+				// if decoding works, use it. else assume data wasn't gzencoded
 				if (function_exists('gzuncompress')) {
 					if ($this->headers['content-encoding'] == 'deflate' && $degzdata = @gzuncompress($data)) {
 						$data = $degzdata;
@@ -542,7 +542,7 @@ class nusoap_server extends nusoap_base {
 		} else {
 			$map = array();
 		}
-		
+
 		if (count($map) > 0) {
 			// there is a mapping
 			if ($map['invoke_class'] != '') {
@@ -569,7 +569,7 @@ class nusoap_server extends nusoap_base {
 				$delim = '';
 			}
 			$this->debug("in invoke_method, delim=$delim");
-	
+
 			$class = '';
 			$method = '';
 			if (mb_strlen($delim) > 0 && mb_substr_count($this->methodname, $delim) == 1) {
@@ -669,8 +669,8 @@ class nusoap_server extends nusoap_base {
 				$this->methodreturn = call_user_func_array($call_arg, array());
 			}
 		}
-        $this->debug('in invoke_method, methodreturn:');
-        $this->appendDebug($this->varDump($this->methodreturn));
+		$this->debug('in invoke_method, methodreturn:');
+		$this->appendDebug($this->varDump($this->methodreturn));
 		$this->debug("in invoke_method, called method $this->methodname, received data of type ".gettype($this->methodreturn));
 	}
 
@@ -701,21 +701,21 @@ class nusoap_server extends nusoap_base {
 			if($this->wsdl){
 				if (sizeof($this->opData['output']['parts']) > 1) {
 					$this->debug('more than one output part, so use the method return unchanged');
-			    	$opParams = $this->methodreturn;
-			    } elseif (sizeof($this->opData['output']['parts']) == 1) {
+					$opParams = $this->methodreturn;
+				} elseif (sizeof($this->opData['output']['parts']) == 1) {
 					$this->debug('exactly one output part, so wrap the method return in a simple array');
 					// TODO: verify that it is not already wrapped!
-			    	//foreach ($this->opData['output']['parts'] as $name => $type) {
+					//foreach ($this->opData['output']['parts'] as $name => $type) {
 					//	$this->debug('wrap in element named ' . $name);
-			    	//}
-			    	$opParams = array($this->methodreturn);
-			    } else {
-			    	$this->debug('no output parts, but wrap the method return in a simple array anyway');
-			    	$opParams = array($this->methodreturn);
-			    }
-			    $return_val = $this->wsdl->serializeRPCParameters($this->methodname,'output',$opParams);
-			    $this->appendDebug($this->wsdl->getDebug());
-			    $this->wsdl->clearDebug();
+					//}
+					$opParams = array($this->methodreturn);
+				} else {
+					$this->debug('no output parts, but wrap the method return in a simple array anyway');
+					$opParams = array($this->methodreturn);
+				}
+				$return_val = $this->wsdl->serializeRPCParameters($this->methodname,'output',$opParams);
+				$this->appendDebug($this->wsdl->getDebug());
+				$this->wsdl->clearDebug();
 				if($errstr = $this->wsdl->getError()){
 					$this->debug('got wsdl error: '.$errstr);
 					$this->fault('SOAP-ENV:Server', 'unable to serialize result');
@@ -763,8 +763,8 @@ class nusoap_server extends nusoap_base {
 		$this->result = 'successful';
 		if($this->wsdl){
 			//if($this->debug_flag){
-            	$this->appendDebug($this->wsdl->getDebug());
-            //	}
+				$this->appendDebug($this->wsdl->getDebug());
+			//	}
 			if (isset($this->opData['output']['encodingStyle'])) {
 				$encodingStyle = $this->opData['output']['encodingStyle'];
 			} else {
@@ -802,10 +802,10 @@ class nusoap_server extends nusoap_base {
 			// $this->outgoing_headers[] = "HTTP/1.0 200 OK";
 			// $this->outgoing_headers[] = "Status: 200 OK";
 		}
-        // add debug data if in debug mode
+		// add debug data if in debug mode
 		if(isset($this->debug_flag) && $this->debug_flag){
-        	$payload .= $this->getDebugAsXMLComment();
-        }
+			$payload .= $this->getDebugAsXMLComment();
+		}
 		$this->outgoing_headers[] = "Server: $this->title Server v$this->version";
 		preg_match('/\$Revisio' . 'n: ([^ ]+)/', $this->revision, $rev);
 		$this->outgoing_headers[] = "X-SOAP-Server: $this->title/$this->version (".$rev[1].")";
@@ -818,7 +818,7 @@ class nusoap_server extends nusoap_base {
 		//begin code to compress payload - by John
 		// NOTE: there is no way to know whether the Web server will also compress
 		// this data.
-		if (mb_strlen($payload) > 1024 && isset($this->headers) && isset($this->headers['accept-encoding'])) {	
+		if (mb_strlen($payload) > 1024 && isset($this->headers) && isset($this->headers['accept-encoding'])) {
 			if (strstr($this->headers['accept-encoding'], 'gzip')) {
 				if (function_exists('gzencode')) {
 					if (isset($this->debug_flag) && $this->debug_flag) {
@@ -872,7 +872,7 @@ class nusoap_server extends nusoap_base {
 			if($this->wsdl->getOperationData($operation)){
 				return true;
 			}
-	    } elseif(isset($this->operations[$operation])){
+		} elseif(isset($this->operations[$operation])){
 			return true;
 		}
 		return false;
@@ -886,13 +886,13 @@ class nusoap_server extends nusoap_base {
 	* @return	mixed	value of the message, decoded into a PHP type
 	* @access   private
 	*/
-    function parseRequest($headers, $data) {
+	function parseRequest($headers, $data) {
 		$this->debug('Entering parseRequest() for data of length ' . mb_strlen($data) . ' headers:');
 		$this->appendDebug($this->varDump($headers));
-    	if (!isset($headers['content-type'])) {
+		if (!isset($headers['content-type'])) {
 			$this->setError('Request not of type text/xml (no content-type header)');
 			return false;
-    	}
+		}
 		if (!strstr($headers['content-type'], 'text/xml')) {
 			$this->setError('Request not of type text/xml');
 			return false;
@@ -930,8 +930,8 @@ class nusoap_server extends nusoap_base {
 			$this->requestHeaders = $parser->getHeaders();
 			// get SOAP Header
 			$this->requestHeader = $parser->get_soapheader();
-            // add document for doclit support
-            $this->document = $parser->document;
+			// add document for doclit support
+			$this->document = $parser->document;
 		}
 	 }
 
@@ -945,7 +945,7 @@ class nusoap_server extends nusoap_base {
 	function getHTTPBody($soapmsg) {
 		return $soapmsg;
 	}
-	
+
 	/**
 	* gets the HTTP content type for the current response.
 	*
@@ -957,7 +957,7 @@ class nusoap_server extends nusoap_base {
 	function getHTTPContentType() {
 		return 'text/xml';
 	}
-	
+
 	/**
 	* gets the HTTP content type charset for the current response.
 	* returns false for non-text content types.
@@ -1049,7 +1049,7 @@ class nusoap_server extends nusoap_base {
 			$this->dispatchMapBySOAPAction[$soap_action] = $map;
 			$this->debug("addDispatchMap: Added map for soap_action $soap_action");
 		}
-		
+
 		return true;
 	}
 
@@ -1096,11 +1096,11 @@ class nusoap_server extends nusoap_base {
 			} else {
 				$this->setError("Neither _SERVER nor HTTP_SERVER_VARS is available");
 			}
-        	if ($HTTPS == '1' || $HTTPS == 'on') {
-        		$SCHEME = 'https';
-        	} else {
-        		$SCHEME = 'http';
-        	}
+			if ($HTTPS == '1' || $HTTPS == 'on') {
+				$SCHEME = 'https';
+			} else {
+				$SCHEME = 'http';
+			}
 			$soapaction = "$SCHEME://$SERVER_NAME$SCRIPT_NAME/$name";
 		}
 		if(false == $style) {
@@ -1114,15 +1114,15 @@ class nusoap_server extends nusoap_base {
 		}
 
 		$this->operations[$name] = array(
-	    'name' => $name,
-	    'in' => $in,
-	    'out' => $out,
-	    'namespace' => $namespace,
-	    'soapaction' => $soapaction,
-	    'style' => $style);
-        if($this->wsdl){
-        	$this->wsdl->addOperation($name,$in,$out,$namespace,$soapaction,$style,$use,$documentation,$encodingStyle);
-	    }
+		'name' => $name,
+		'in' => $in,
+		'out' => $out,
+		'namespace' => $namespace,
+		'soapaction' => $soapaction,
+		'style' => $style);
+		if($this->wsdl){
+			$this->wsdl->addOperation($name,$in,$out,$namespace,$soapaction,$style,$use,$documentation,$encodingStyle);
+		}
 		return true;
 	}
 
@@ -1144,21 +1144,21 @@ class nusoap_server extends nusoap_base {
 		$this->fault->soap_defencoding = $this->soap_defencoding;
 	}
 
-    /**
-    * Sets up wsdl object.
-    * Acts as a flag to enable internal WSDL generation
-    *
-    * @param string $serviceName, name of the service
-    * @param mixed $namespace optional 'tns' service namespace or false
-    * @param mixed $endpoint optional URL of service endpoint or false
-    * @param string $style optional (rpc|document) WSDL style (also specified by operation)
-    * @param string $transport optional SOAP transport
-    * @param mixed $schemaTargetNamespace optional 'types' targetNamespace for service schema or false
-    * @param string $serviceDocumentation documentation for the service
-    */
-    function configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http', $schemaTargetNamespace = false, $serviceDocumentation = '')
-    {
-    	global $HTTP_SERVER_VARS;
+	/**
+	* Sets up wsdl object.
+	* Acts as a flag to enable internal WSDL generation
+	*
+	* @param string $serviceName, name of the service
+	* @param mixed $namespace optional 'tns' service namespace or false
+	* @param mixed $endpoint optional URL of service endpoint or false
+	* @param string $style optional (rpc|document) WSDL style (also specified by operation)
+	* @param string $transport optional SOAP transport
+	* @param mixed $schemaTargetNamespace optional 'types' targetNamespace for service schema or false
+	* @param string $serviceDocumentation documentation for the service
+	*/
+	function configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http', $schemaTargetNamespace = false, $serviceDocumentation = '')
+	{
+		global $HTTP_SERVER_VARS;
 
 		if (isset($_SERVER)) {
 			$SERVER_NAME = $_SERVER['SERVER_NAME'];
@@ -1176,61 +1176,61 @@ class nusoap_server extends nusoap_base {
 		// If server name has port number attached then strip it (else port number gets duplicated in WSDL output) (occurred using lighttpd and FastCGI)
 		$colon = mb_strpos($SERVER_NAME,":");
 		if ($colon) {
-		    $SERVER_NAME = mb_substr($SERVER_NAME, 0, $colon);
+			$SERVER_NAME = mb_substr($SERVER_NAME, 0, $colon);
 		}
 		if ($SERVER_PORT == 80) {
 			$SERVER_PORT = '';
 		} else {
 			$SERVER_PORT = ':' . $SERVER_PORT;
 		}
-        if(false == $namespace) {
-            $namespace = "http://$SERVER_NAME/soap/$serviceName";
-        }
-        
-        if(false == $endpoint) {
-        	if ($HTTPS == '1' || $HTTPS == 'on') {
-        		$SCHEME = 'https';
-        	} else {
-        		$SCHEME = 'http';
-        	}
-            $endpoint = "$SCHEME://$SERVER_NAME$SERVER_PORT$SCRIPT_NAME";
-        }
-        
+		if(false == $namespace) {
+			$namespace = "http://$SERVER_NAME/soap/$serviceName";
+		}
+
+		if(false == $endpoint) {
+			if ($HTTPS == '1' || $HTTPS == 'on') {
+				$SCHEME = 'https';
+			} else {
+				$SCHEME = 'http';
+			}
+			$endpoint = "$SCHEME://$SERVER_NAME$SERVER_PORT$SCRIPT_NAME";
+		}
+
 		if (false == $transport) {
 			$transport = 'http://schemas.xmlsoap.org/soap/http';
 		}
 
-        if(false == $schemaTargetNamespace) {
-            $schemaTargetNamespace = $namespace;
-        }
-        
+		if(false == $schemaTargetNamespace) {
+			$schemaTargetNamespace = $namespace;
+		}
+
 		$this->wsdl = new wsdl;
 		$this->wsdl->serviceName = $serviceName;
-        $this->wsdl->endpoint = $endpoint;
-        $this->wsdl->serviceDocumentation = $serviceDocumentation;
+		$this->wsdl->endpoint = $endpoint;
+		$this->wsdl->serviceDocumentation = $serviceDocumentation;
 		$this->wsdl->namespaces['tns'] = $namespace;
 		$this->wsdl->namespaces['soap'] = 'http://schemas.xmlsoap.org/wsdl/soap/';
 		$this->wsdl->namespaces['wsdl'] = 'http://schemas.xmlsoap.org/wsdl/';
 		if ($schemaTargetNamespace != $namespace) {
 			$this->wsdl->namespaces['types'] = $schemaTargetNamespace;
 		}
-        $this->wsdl->schemas[$schemaTargetNamespace][0] = new nusoap_xmlschema('', '', $this->wsdl->namespaces);
-        if ($style == 'document') {
-	        $this->wsdl->schemas[$schemaTargetNamespace][0]->schemaInfo['elementFormDefault'] = 'qualified';
-        }
-        $this->wsdl->schemas[$schemaTargetNamespace][0]->schemaTargetNamespace = $schemaTargetNamespace;
-        $this->wsdl->schemas[$schemaTargetNamespace][0]->imports['http://schemas.xmlsoap.org/soap/encoding/'][0] = array('location' => '', 'loaded' => true);
-        $this->wsdl->schemas[$schemaTargetNamespace][0]->imports['http://schemas.xmlsoap.org/wsdl/'][0] = array('location' => '', 'loaded' => true);
-        $this->wsdl->bindings[$serviceName.'Binding'] = array(
-        	'name'=>$serviceName.'Binding',
-            'style'=>$style,
-            'transport'=>$transport,
-            'portType'=>$serviceName.'PortType');
-        $this->wsdl->ports[$serviceName.'Port'] = array(
-        	'binding'=>$serviceName.'Binding',
-            'location'=>$endpoint,
-            'bindingType'=>'http://schemas.xmlsoap.org/wsdl/soap/');
-    }
+		$this->wsdl->schemas[$schemaTargetNamespace][0] = new nusoap_xmlschema('', '', $this->wsdl->namespaces);
+		if ($style == 'document') {
+			$this->wsdl->schemas[$schemaTargetNamespace][0]->schemaInfo['elementFormDefault'] = 'qualified';
+		}
+		$this->wsdl->schemas[$schemaTargetNamespace][0]->schemaTargetNamespace = $schemaTargetNamespace;
+		$this->wsdl->schemas[$schemaTargetNamespace][0]->imports['http://schemas.xmlsoap.org/soap/encoding/'][0] = array('location' => '', 'loaded' => true);
+		$this->wsdl->schemas[$schemaTargetNamespace][0]->imports['http://schemas.xmlsoap.org/wsdl/'][0] = array('location' => '', 'loaded' => true);
+		$this->wsdl->bindings[$serviceName.'Binding'] = array(
+			'name'=>$serviceName.'Binding',
+			'style'=>$style,
+			'transport'=>$transport,
+			'portType'=>$serviceName.'PortType');
+		$this->wsdl->ports[$serviceName.'Port'] = array(
+			'binding'=>$serviceName.'Binding',
+			'location'=>$endpoint,
+			'bindingType'=>'http://schemas.xmlsoap.org/wsdl/soap/');
+	}
 }
 
 /**
