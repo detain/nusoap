@@ -169,7 +169,7 @@ class wsdl2nusoap extends nusoap_base {
 		} else {
 			echo "<?php\n";
 			echo "/*\n";
-			echo " *\tgenerated from " . $this->wsdlFile . " at " . $this->getmicrotime() . "\n";
+			echo " *\tgenerated from " . $this->wsdlFile . " at " . $this->getmicrotime().PHP_EOL;
 			echo " */\n";
 			echo "require_once('c:/nusoap/lib/nusoap.php');\n";
 			$this->getComplexTypes();
@@ -198,7 +198,7 @@ class wsdl2nusoap extends nusoap_base {
 						foreach ($ct['elements'] as $elname => $el) {
 							$this->debug("Process element $elname for complexType $ctname");
 							$names[] = $el['name'];
-							echo "\tvar \$" . $el['name'] . "; // " . $el['type'] . "\n";
+							echo "\tvar \$" . $el['name'] . "; // " . $el['type'].PHP_EOL;
 						}
 					}
 					echo "\n";
@@ -208,7 +208,7 @@ class wsdl2nusoap extends nusoap_base {
 						foreach ($ct['attributes'] as $atname => $at) {
 							$this->debug("Process attribute $atname for complexType $ctname");
 							$names[] = $at['name'];
-							echo "\tvar " . $at['name'] . "; // " . $at['type'] . "\n";
+							echo "\tvar " . $at['name'] . "; // " . $at['type'].PHP_EOL;
 						}
 					}
 					echo "\n";
@@ -241,7 +241,7 @@ class wsdl2nusoap extends nusoap_base {
 			echo "/*\n";
 			echo " *\tport: $port\n";
 			echo " *\tlocation: $location\n";
-			echo " *\tbinding: " . $portData['binding'] . "\n";
+			echo " *\tbinding: " . $portData['binding'].PHP_EOL;
 			if (isset($this->wsdl->bindings[$portData['binding']])) {
 				$this->debug("Process binding " . $portData['binding']);
 				$binding = $this->wsdl->bindings[$portData['binding']];
