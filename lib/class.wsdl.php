@@ -599,7 +599,7 @@ class wsdl extends nusoap_base {
 		} else {
 			$this->debug("getOperations bindingType $bindingType may not be supported");
 		}
-		$this->debug("getOperations for port '$portName' bindingType $bindingType");
+		$this->debug("getOperations for port '{$portName}' bindingType $bindingType");
 		// loop thru ports
 		foreach($this->ports as $port => $portData) {
 			$this->debug("getOperations checking port $port bindingType " . $portData['bindingType']);
@@ -617,7 +617,7 @@ class wsdl extends nusoap_base {
 			}
 		}
 		if (count($ops) == 0) {
-			$this->debug("getOperations found no operations for port '$portName' bindingType $bindingType");
+			$this->debug("getOperations found no operations for port '{$portName}' bindingType $bindingType");
 		}
 		return $ops;
 	}

@@ -346,7 +346,7 @@ class wsdl2nusoap extends nusoap_base {
 						echo "\t */\n";
 						echo "\tfunction " . str_replace('.', '__', $opname) . "($paramStr) {\n";
 						echo "\t\t\$params = array($paramArrayStr);\n";
-						echo "\t\treturn \$this->call('{$opname}', \$params, '{$namespace}', '$soapAction', false, null, '{$style}', '{$use}');\n";
+						echo "\t\treturn \$this->call('{$opname}', \$params, '{$namespace}', '{$soapAction}', false, null, '{$style}', '{$use}');\n";
 						echo "\t}\n";
 					}
 				}

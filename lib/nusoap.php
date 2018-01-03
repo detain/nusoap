@@ -4081,7 +4081,7 @@ class nusoap_server extends nusoap_base {
 			if (!function_exists($this->methodname)) {
 				$this->debug("in invoke_method, function '$this->methodname' not found!");
 				$this->result = 'fault: method not found';
-				$this->fault('SOAP-ENV:Client',"method '$this->methodname'('$orig_methodname') not defined in service('$try_class' '{$delim}')");
+				$this->fault('SOAP-ENV:Client',"method '$this->methodname'('{$orig_methodname}') not defined in service('{$try_class}' '{$delim}')");
 				return;
 			}
 		} else {
@@ -4089,7 +4089,7 @@ class nusoap_server extends nusoap_base {
 			if (!in_array($method_to_compare, get_class_methods($class))) {
 				$this->debug("in invoke_method, method '$this->methodname' not found in class '{$class}'!");
 				$this->result = 'fault: method not found';
-				$this->fault('SOAP-ENV:Client',"method '$this->methodname'/'$method_to_compare'('$orig_methodname') not defined in service/'{$class}'('$try_class' '{$delim}')");
+				$this->fault('SOAP-ENV:Client',"method '$this->methodname'/'{$method_to_compare}'('{$orig_methodname}') not defined in service/'{$class}'('{$try_class}' '{$delim}')");
 				return;
 			}
 		}
@@ -5320,7 +5320,7 @@ class wsdl extends nusoap_base {
 		} else {
 			$this->debug("getOperations bindingType $bindingType may not be supported");
 		}
-		$this->debug("getOperations for port '$portName' bindingType $bindingType");
+		$this->debug("getOperations for port '{$portName}' bindingType $bindingType");
 		// loop thru ports
 		foreach($this->ports as $port => $portData) {
 			$this->debug("getOperations checking port $port bindingType " . $portData['bindingType']);
@@ -5338,7 +5338,7 @@ class wsdl extends nusoap_base {
 			}
 		}
 		if (count($ops) == 0) {
-			$this->debug("getOperations found no operations for port '$portName' bindingType $bindingType");
+			$this->debug("getOperations found no operations for port '{$portName}' bindingType $bindingType");
 		}
 		return $ops;
 	}
