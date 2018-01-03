@@ -799,7 +799,7 @@ class nusoap_client extends nusoap_base  {
 					$paramCommentStr = '';
 					foreach ($opData['input']['parts'] as $name => $type) {
 						$paramStr .= "\$$name, ";
-						$paramArrayStr .= "'$name' => \$$name, ";
+						$paramArrayStr .= "'{$name}' => \$$name, ";
 						$paramCommentStr .= "$type \$$name, ";
 					}
 					$paramStr = mb_substr($paramStr, 0, mb_strlen($paramStr)-2);
@@ -814,7 +814,7 @@ class nusoap_client extends nusoap_base  {
 				$evalStr .= "// $paramCommentStr
 	function " . str_replace('.', '__', $operation) . "($paramStr) {
 		\$params = array($paramArrayStr);
-		return \$this->call('$operation', \$params, '".$opData['namespace']."', '".(isset($opData['soapAction']) ? $opData['soapAction'] : '')."');
+		return \$this->call('{$operation}', \$params, '".$opData['namespace']."', '".(isset($opData['soapAction']) ? $opData['soapAction'] : '')."');
 	}
 	";
 				unset($paramStr);

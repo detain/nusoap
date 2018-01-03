@@ -866,9 +866,9 @@ class wsdl extends nusoap_base {
 				Click on an operation name to view it&apos;s details.</p>
 				<ul>';
 				foreach($this->getOperations() as $op => $data){
-					$b .= "<li><a href='#' onclick=\"popout();popup('$op')\">$op</a></li>";
+					$b .= "<li><a href='#' onclick=\"popout();popup('{$op}')\">$op</a></li>";
 					// create hidden div
-					$b .= "<div id='$op' class='hidden'>
+					$b .= "<div id='{$op}' class='hidden'>
 					<a href='#' onclick='popout()' style='float: right;'><font color='#ffffff'>Close</font></a><br><br>";
 					foreach($data as $donnie => $marie){ // loop through opdata
 						if($donnie == 'input' || $donnie == 'output'){ // show input/output data

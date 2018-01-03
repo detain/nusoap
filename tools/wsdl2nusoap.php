@@ -216,7 +216,7 @@ class wsdl2nusoap extends nusoap_base {
 					echo "\tfunction " . $ct['name'] . "(\$values) {\n";
 					echo "\t\tif (isset(\$values) && is_array(\$values)) {\n";
 					foreach ($names as $name) {
-						echo "\t\t\tif (isset(\$values['$name'])) \$this->$name = \$values['$name'];\n";
+						echo "\t\t\tif (isset(\$values['{$name}'])) \$this->$name = \$values['{$name}'];\n";
 					}
 					echo "\t\t}\n";
 					echo "\t}\n";
@@ -272,7 +272,7 @@ class wsdl2nusoap extends nusoap_base {
 
 				echo "class $port extends nusoap_client {\n";
 				echo "\t// constructor\n";
-				echo "\tfunction $port(\$endpoint = '$this->wsdlFile', \$wsdl = 'wsdl', \$proxyhost = false, \$proxyport = false, \$proxyusername = false, \$proxypassword = false, \$timeout = 0, \$response_timeout = 30, \$portName = '$port') {\n";
+				echo "\tfunction $port(\$endpoint = '$this->wsdlFile', \$wsdl = 'wsdl', \$proxyhost = false, \$proxyport = false, \$proxyusername = false, \$proxypassword = false, \$timeout = 0, \$response_timeout = 30, \$portName = '{$port}') {\n";
 				echo "\t\tparent::nusoap_client(\$endpoint, \$wsdl, \$proxyhost, \$proxyport, \$proxyusername, \$proxypassword, \$timeout, \$response_timeout, \$portName);\n";
 				echo "\t}\n";
 				if (isset($binding['operations'])) {
@@ -323,7 +323,7 @@ class wsdl2nusoap extends nusoap_base {
 							foreach ($input['parts'] as $name => $type) {
 								$this->debug("Process input part $name for operation $opname");
 								$paramStr .= "\$$name, ";
-								$paramArrayStr .= "'$name' => \$$name, ";
+								$paramArrayStr .= "'{$name}' => \$$name, ";
 								$paramCommentStr .= "\t *\t\t\t$type \$$name\n";
 							}
 							$paramStr = mb_substr($paramStr, 0, mb_strlen($paramStr)-2);
@@ -346,7 +346,7 @@ class wsdl2nusoap extends nusoap_base {
 						echo "\t */\n";
 						echo "\tfunction " . str_replace('.', '__', $opname) . "($paramStr) {\n";
 						echo "\t\t\$params = array($paramArrayStr);\n";
-						echo "\t\treturn \$this->call('$opname', \$params, '$namespace', '$soapAction', false, null, '$style', '$use');\n";
+						echo "\t\treturn \$this->call('{$opname}', \$params, '{$namespace}', '$soapAction', false, null, '{$style}', '{$use}');\n";
 						echo "\t}\n";
 					}
 				}

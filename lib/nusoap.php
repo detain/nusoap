@@ -823,7 +823,7 @@ class nusoap_base {
 		if (isset($this->namespaces[$prefix])) {
 			return $this->namespaces[$prefix];
 		}
-		//$this->setError("No namespace registered for prefix '$prefix'");
+		//$this->setError("No namespace registered for prefix '{$prefix}'");
 		return false;
 	}
 
@@ -1770,10 +1770,10 @@ class nusoap_xmlschema extends nusoap_base  {
 	*/
 	function getPHPType($type,$ns){
 		if(isset($this->typemap[$ns][$type])){
-			//print "found type '$type' and ns $ns in typemap<br>";
+			//print "found type '{$type}' and ns $ns in typemap<br>";
 			return $this->typemap[$ns][$type];
 		} elseif(isset($this->complexTypes[$type])){
-			//print "getting type '$type' and ns $ns from complexTypes array<br>";
+			//print "getting type '{$type}' and ns $ns from complexTypes array<br>";
 			return $this->complexTypes[$type]['phpType'];
 		}
 		return false;
@@ -4081,15 +4081,15 @@ class nusoap_server extends nusoap_base {
 			if (!function_exists($this->methodname)) {
 				$this->debug("in invoke_method, function '$this->methodname' not found!");
 				$this->result = 'fault: method not found';
-				$this->fault('SOAP-ENV:Client',"method '$this->methodname'('$orig_methodname') not defined in service('$try_class' '$delim')");
+				$this->fault('SOAP-ENV:Client',"method '$this->methodname'('$orig_methodname') not defined in service('$try_class' '{$delim}')");
 				return;
 			}
 		} else {
 			$method_to_compare = (mb_substr(phpversion(), 0, 2) == '4.') ? strtolower($method) : $method;
 			if (!in_array($method_to_compare, get_class_methods($class))) {
-				$this->debug("in invoke_method, method '$this->methodname' not found in class '$class'!");
+				$this->debug("in invoke_method, method '$this->methodname' not found in class '{$class}'!");
 				$this->result = 'fault: method not found';
-				$this->fault('SOAP-ENV:Client',"method '$this->methodname'/'$method_to_compare'('$orig_methodname') not defined in service/'$class'('$try_class' '$delim')");
+				$this->fault('SOAP-ENV:Client',"method '$this->methodname'/'$method_to_compare'('$orig_methodname') not defined in service/'{$class}'('$try_class' '{$delim}')");
 				return;
 			}
 		}
@@ -5587,9 +5587,9 @@ class wsdl extends nusoap_base {
 				Click on an operation name to view it&apos;s details.</p>
 				<ul>';
 				foreach($this->getOperations() as $op => $data){
-					$b .= "<li><a href='#' onclick=\"popout();popup('$op')\">$op</a></li>";
+					$b .= "<li><a href='#' onclick=\"popout();popup('{$op}')\">$op</a></li>";
 					// create hidden div
-					$b .= "<div id='$op' class='hidden'>
+					$b .= "<div id='{$op}' class='hidden'>
 					<a href='#' onclick='popout()' style='float: right;'><font color='#ffffff'>Close</font></a><br><br>";
 					foreach($data as $donnie => $marie){ // loop through opdata
 						if($donnie == 'input' || $donnie == 'output'){ // show input/output data
@@ -8143,7 +8143,7 @@ class nusoap_client extends nusoap_base  {
 					$paramCommentStr = '';
 					foreach ($opData['input']['parts'] as $name => $type) {
 						$paramStr .= "\$$name, ";
-						$paramArrayStr .= "'$name' => \$$name, ";
+						$paramArrayStr .= "'{$name}' => \$$name, ";
 						$paramCommentStr .= "$type \$$name, ";
 					}
 					$paramStr = mb_substr($paramStr, 0, mb_strlen($paramStr)-2);
@@ -8158,7 +8158,7 @@ class nusoap_client extends nusoap_base  {
 				$evalStr .= "// $paramCommentStr
 	function " . str_replace('.', '__', $operation) . "($paramStr) {
 		\$params = array($paramArrayStr);
-		return \$this->call('$operation', \$params, '".$opData['namespace']."', '".(isset($opData['soapAction']) ? $opData['soapAction'] : '')."');
+		return \$this->call('{$operation}', \$params, '".$opData['namespace']."', '".(isset($opData['soapAction']) ? $opData['soapAction'] : '')."');
 	}
 	";
 				unset($paramStr);

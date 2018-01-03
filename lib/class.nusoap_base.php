@@ -833,7 +833,7 @@ class nusoap_base {
 		if (isset($this->namespaces[$prefix])) {
 			return $this->namespaces[$prefix];
 		}
-		//$this->setError("No namespace registered for prefix '$prefix'");
+		//$this->setError("No namespace registered for prefix '{$prefix}'");
 		return false;
 	}
 
