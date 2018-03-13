@@ -3,7 +3,7 @@
     "type": "library",
     "description": "NuSOAP PHP library re-packaged for Packagist/Composer",
     "keywords": ["soap","nusoap","api"],
-    "license": "LGPL-2.1-or-later",
+    "license": "LGPL-2.1-only",
     "authors": [
         {
             "name": "Joe Huss",
