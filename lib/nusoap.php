@@ -4062,7 +4062,7 @@ class nusoap_server extends nusoap_base {
 			if (mb_strlen($delim) > 0 && mb_substr_count($this->methodname, $delim) == 1) {
 				$try_class = mb_substr($this->methodname, 0, mb_strpos($this->methodname, $delim));
 				if (class_exists($try_class)) {
-					// get the class and method name
+                    // get the class and method name
 					$class = $try_class;
 					$method = mb_substr($this->methodname, mb_strpos($this->methodname, $delim) + mb_strlen($delim));
 					$this->debug("in invoke_method, class=$class method=$method delim=$delim");
@@ -4650,7 +4650,7 @@ class nusoap_server extends nusoap_base {
 		if (isset($_SERVER)) {
 			$SERVER_NAME = $_SERVER['SERVER_NAME'];
 			$SERVER_PORT = $_SERVER['SERVER_PORT'];
-			$SCRIPT_NAME = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+			$SCRIPT_NAME = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : $_SERVER['PHP_SELF'];
 			$HTTPS = isset($_SERVER['HTTPS']) ? $_SERVER['HTTPS'] : (isset($HTTP_SERVER_VARS['HTTPS']) ? $HTTP_SERVER_VARS['HTTPS'] : 'off');
 		} elseif (isset($HTTP_SERVER_VARS)) {
 			$SERVER_NAME = $HTTP_SERVER_VARS['SERVER_NAME'];
@@ -5491,7 +5491,7 @@ class wsdl extends nusoap_base {
 		global $HTTP_SERVER_VARS;
 
 		if (isset($_SERVER)) {
-			$PHP_SELF = $_SERVER['PHP_SELF'];
+			$PHP_SELF = isset($_SERVER['SCRIPT_NAME']) ? $_SERVER['SCRIPT_NAME'] : $_SERVER['PHP_SELF'];
 		} elseif (isset($HTTP_SERVER_VARS)) {
 			$PHP_SELF = $HTTP_SERVER_VARS['PHP_SELF'];
 		} else {
@@ -7419,7 +7419,7 @@ class nusoap_client extends nusoap_base  {
 	var $responseData = '';			// SOAP payload of response
 	var $cookies = array();			// Cookies from response or for request
 	var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ utf8_decode()
-	var $operations = array();		// WSDL operations, empty for WSDL initialization error
+    var $operations = array();      // WSDL operations, empty for WSDL initialization error
 	var $curl_options = array();	// User-specified cURL options
 	var $bindingType = '';			// WSDL operation binding type
 	var $use_curl = false;			// whether to always try to use cURL
