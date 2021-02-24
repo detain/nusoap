@@ -4062,7 +4062,7 @@ class nusoap_server extends nusoap_base {
 			if (mb_strlen($delim) > 0 && mb_substr_count($this->methodname, $delim) == 1) {
 				$try_class = mb_substr($this->methodname, 0, mb_strpos($this->methodname, $delim));
 				if (class_exists($try_class)) {
-                    // get the class and method name
+					// get the class and method name
 					$class = $try_class;
 					$method = mb_substr($this->methodname, mb_strpos($this->methodname, $delim) + mb_strlen($delim));
 					$this->debug("in invoke_method, class=$class method=$method delim=$delim");
@@ -5692,7 +5692,7 @@ class wsdl extends nusoap_base {
 						$ns = $this->getNamespaceFromPrefix($typePrefix);
 						$localPart = $this->getLocalPart($partType);
 						$typeDef = $this->getTypeDef($localPart, $ns);
-						if ($typeDef['typeClass'] == 'element') {
+						if (is_array($typeDef) && $typeDef['typeClass'] == 'element') {
 							$elementortype = 'element';
 							if (mb_substr($localPart, -1) == '^') {
 								$localPart = mb_substr($localPart, 0, -1);
@@ -7417,9 +7417,9 @@ class nusoap_client extends nusoap_base  {
 	var $request = '';				// HTTP request
 	var $response = '';				// HTTP response
 	var $responseData = '';			// SOAP payload of response
-	var $cookies = array();			// Cookies from response or for request
+	var $cookies = array();         // Cookies from response or for request
 	var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ utf8_decode()
-    var $operations = array();      // WSDL operations, empty for WSDL initialization error
+	var $operations = array();      // WSDL operations, empty for WSDL initialization error
 	var $curl_options = array();	// User-specified cURL options
 	var $bindingType = '';			// WSDL operation binding type
 	var $use_curl = false;			// whether to always try to use cURL
