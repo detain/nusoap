@@ -52,35 +52,35 @@ require_once($dirname . '/../lib/class.xmlschema.php');
 require_once($dirname . '/../lib/class.wsdl.php');
 
 class wsdl2nusoap_options {
-	var $username = '';				// Username for HTTP authentication
-	var $password = '';				// Password for HTTP authentication
-	var $authtype = '';				// Type of HTTP authentication
-	var $certRequest = array();		// Certificate for HTTP SSL authentication
+	public $username = '';				// Username for HTTP authentication
+	public $password = '';				// Password for HTTP authentication
+	public $authtype = '';				// Type of HTTP authentication
+	public $certRequest = [];		// Certificate for HTTP SSL authentication
 
-    var $proxyhost = '';			// Hostname or IP address for proxy
-    var $proxyport = '';			// IP port for proxy
-	var $proxyusername = '';		// Username for proxy authentication
-	var $proxypassword = '';		// Password for proxy authentication
+    public $proxyhost = '';			// Hostname or IP address for proxy
+    public $proxyport = '';			// IP port for proxy
+	public $proxyusername = '';		// Username for proxy authentication
+	public $proxypassword = '';		// Password for proxy authentication
 
-	var $timeout = 0;				// HTTP connection timeout
-	var $response_timeout = 30;		// HTTP response timeout
+	public $timeout = 0;				// HTTP connection timeout
+	public $response_timeout = 30;		// HTTP response timeout
 
-	var $curl_options = array();	// User-specified cURL options
-	var $use_curl = false;			// whether to always try to use cURL
+	public $curl_options = [];	// User-specified cURL options
+	public $use_curl = false;			// whether to always try to use cURL
 
-	var $portName = '';				// port name to use in WSDL
-	var $bindingType = '';			// WSDL operation binding type
+	public $portName = '';				// port name to use in WSDL
+	public $bindingType = '';			// WSDL operation binding type
 	
-	function wsdl2nusoap_options() {
+	public function wsdl2nusoap_options() {
 	}
 }
 
 class wsdl2nusoap extends nusoap_base {
-	var $options;
-	var $wsdl;
-	var $wsdlFile;
+	public $options;
+	public $wsdl;
+	public $wsdlFile;
 
-	function wsdl2nusoap($wsdl, $options = null) {
+	public function wsdl2nusoap($wsdl, $options = null) {
 		parent::nusoap_base();
 
 		$this->debug("Enter wsdl2nusoap ctor");
@@ -112,7 +112,7 @@ class wsdl2nusoap extends nusoap_base {
 	*
 	* @access   private
 	*/
-	function checkWSDL() {
+	public function checkWSDL() {
 		$this->appendDebug($this->wsdl->getDebug());
 		$this->wsdl->clearDebug();
 		$this->debug('Enter checkWSDL');
@@ -147,7 +147,7 @@ class wsdl2nusoap extends nusoap_base {
 	 *
 	 * @access	public
 	 */
-	function loadWSDL() {
+	public function loadWSDL() {
 		$this->debug('Enter loadWSDL');
 		if (is_null($this->wsdl)) {
 			$this->debug('instantiating wsdl class with doc: ' . $this->wsdlFile);
@@ -161,7 +161,7 @@ class wsdl2nusoap extends nusoap_base {
 		$this->debug('Leave checkWSDL');
 	}
 
-	function getCode() {
+	public function getCode() {
 		$this->debug("Enter getCode");
 		$this->loadWSDL();
 		if ($this->getError()) {
@@ -179,14 +179,14 @@ class wsdl2nusoap extends nusoap_base {
 		$this->debug("Leave getCode");
 	}
 
-	function getComplexTypes() {
+	public function getComplexTypes() {
 		$this->debug("Enter getComplexTypes");
 		foreach ($this->wsdl->schemas as $ns => $list) {
 			$this->debug("Process namespace $ns");
 			foreach ($list as $xs) {
 				foreach ($xs->complexTypes as $ctname => $ct) {
 					$this->debug("Process complexType $ctname");
-					$names = array();
+					$names = [];
 					echo "\n";
 					echo "/*\n";
 					echo " *\t$ns:$ctname\n";
@@ -232,7 +232,7 @@ class wsdl2nusoap extends nusoap_base {
 	*
 	* @access   private
 	*/
-	function getOperations() {
+	public function getOperations() {
 		$this->debug("Enter getOperations");
 		foreach ($this->wsdl->ports as $port => $portData) {
 			$this->debug("Process port $port");
