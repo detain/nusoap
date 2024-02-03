@@ -10,10 +10,10 @@
  *	Authentication: digest
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 echo 'You must set your username and password in the source';
 exit();
 $client = new nusoap_client("http://staging.mappoint.net/standard-30/mappoint.wsdl", 'wsdl',
@@ -24,21 +24,21 @@ if ($err) {
 }
 $client->setCredentials($username, $password, 'digest');
 $client->useHTTPPersistentConnection();
-$view = array(
+$view = [
 	'Height' => 200,
 	'Width' => 300,
-	'CenterPoint' => array(
+	'CenterPoint' => [
 		'Latitude' => 40,
 		'Longitude' => -120
-	)
-);
+	]
+];
 $myViews[] = new soapval('MapView', 'ViewByHeightWidth', $view, false, 'http://s.mappoint.net/mappoint-30/');
-$mapSpec = array(
+$mapSpec = [
 	'DataSourceName' => "MapPoint.NA",
-	'Views' => array('MapView' => $myViews)
-);
-$map = array('specification' => $mapSpec);
-$result = $client->call('GetMap', array('parameters' => $map));
+	'Views' => ['MapView' => $myViews]
+];
+$map = ['specification' => $mapSpec];
+$result = $client->call('GetMap', ['parameters' => $map]);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

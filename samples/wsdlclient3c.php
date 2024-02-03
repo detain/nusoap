@@ -10,18 +10,18 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 $client = new soapclient('http://www.scottnichol.com/samples/hellowsdl4.php?wsdl&debug=1', true,
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
 if ($err) {
 	echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
 }
-$person = array('firstname' => 'Willi', 'age' => 22, 'gender' => 'male');
-$result = $client->call('hello', array('person' => $person));
+$person = ['firstname' => 'Willi', 'age' => 22, 'gender' => 'male'];
+$result = $client->call('hello', ['person' => $person]);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

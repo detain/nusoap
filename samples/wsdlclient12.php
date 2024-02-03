@@ -11,12 +11,12 @@
  */
 require_once('../lib/nusoap.php');
 require_once('../lib/class.wsdlcache.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 
-$method = isset($_GET['method']) ? $_GET['method'] : 'ItemSearch';
+$method = $_GET['method'] ?? 'ItemSearch';
 
 $AWSAccessKeyId = 'Your AWS Access Key ID';
 $AWSSecretAccessKey = 'Your AWS Secret Access Key';
@@ -60,24 +60,24 @@ function GetCartCreateParams() {
 	global $AWSAccessKeyId;
 
 	// create items to be added to the cart
-	$item = array ();
-	$item[0] = array(  "ASIN" => "0596004206",
+	$item =  [];
+	$item[0] = [  "ASIN" => "0596004206",
 					   "Quantity" => "1"
-					);
-	$item[1] = array(  "ASIN" => "0596003277",
+					];
+	$item[1] = [  "ASIN" => "0596003277",
 					   "Quantity" => "2"
-					);
+					];
 
 	// pack it to <Item> array
-	$items =  array("Item" => $item);
+	$items =  ["Item" => $item];
 	// Construct request parameters
-	$request = array("Items" => $items, "ResponseGroup" => "CartSimilarities");
+	$request = ["Items" => $items, "ResponseGroup" => "CartSimilarities"];
 	
 	// Construct  all parameters
-	$cartCreate = array(
+	$cartCreate = [
 		'AWSAccessKeyId' => $AWSAccessKeyId,
 		"Request" => $request
-	);
+	];
 
 	return $cartCreate;
 }
@@ -85,25 +85,25 @@ function GetCartCreateParams() {
 function GetItemLookupParams() {
 	global $AWSAccessKeyId;
 
-	$itemLookupRequest[] = array(
+	$itemLookupRequest[] = [
 		'ItemId' => 'B0002IQML6',
 		'IdType' => 'ASIN',
 		'Condition' => 'All',
 		'ResponseGroup' => 'Large'
-	);
+	];
 	
-	$itemLookupRequest[] = array(
+	$itemLookupRequest[] = [
 		'ItemId' => '0486411214',
 		'IdType' => 'ASIN',
 		'Condition' => 'New',
 		'ResponseGroup' => 'Small'
-	);
+	];
 
-	$itemLookup = array(
+	$itemLookup = [
 		'AWSAccessKeyId' => $AWSAccessKeyId,
 	//	'AssociateTag' => '',
 		'Request' => $itemLookupRequest
-	);
+	];
 	
 	return $itemLookup;
 }
@@ -111,22 +111,22 @@ function GetItemLookupParams() {
 function GetItemSearchParams() {
 	global $AWSAccessKeyId;
 
-	$itemSearchRequest = array(
+	$itemSearchRequest = [
 		'BrowseNode' => '53',
 		'ItemPage' => 1,
 	//	'ResponseGroup' => array('Request', 'Small'),
 		'SearchIndex' => 'Books',
 		'Sort' => 'salesrank'
-	);
+	];
 	
-	$itemSearch = array(
+	$itemSearch = [
 		'AWSAccessKeyId' => $AWSAccessKeyId,
 	//	'AssociateTag' => '',
 	//	'Validate' => '',
 	//	'XMLEscaping' => '',
 	//	'Shared' => $itemSearchRequest,
-		'Request' => array($itemSearchRequest)
-	);
+		'Request' => [$itemSearchRequest]
+	];
 	
 	return $itemSearch;
 }
@@ -134,15 +134,15 @@ function GetItemSearchParams() {
 function GetItemSearchParams2() {
 	global $AWSAccessKeyId;
 
-	$request = array(
+	$request = [
 		"Keywords" => "postal stamps",
 		"SearchIndex" => "Books"
-	);
+	];
 
-	$itemSearch = array(
+	$itemSearch = [
 		'AWSAccessKeyId' => $AWSAccessKeyId,
 		'Request' => $request
-	);
+	];
 
 	return $itemSearch;
 }
@@ -150,21 +150,21 @@ function GetItemSearchParams2() {
 function GetListLookupParams() {
 	global $AWSAccessKeyId;
 
-	$listLookupRequest[] = array(
+	$listLookupRequest[] = [
 		'ListId' => '1L0ZL7Y9FL4U0',
 		'ListType' => 'WishList',
 		'ProductPage' => 1,
 		'ResponseGroup' => 'ListFull',
 		'Sort' => 'LastUpdated'
-	);
+	];
 	
-	$listLookupRequest[] = array(
+	$listLookupRequest[] = [
 		'ListId' => '1L0ZL7Y9FL4U0',
 		'ListType' => 'WishList',
 		'ProductPage' => 2,
 		'ResponseGroup' => 'ListFull',
 		'Sort' => 'LastUpdated'
-	);
+	];
 /*
 // two lookup maximum
 	$listLookupRequest[] = array(
@@ -175,11 +175,11 @@ function GetListLookupParams() {
 		'Sort' => 'LastUpdated'
 	);
 */	
-	$listLookup = array(
+	$listLookup = [
 		'AWSAccessKeyId' => $AWSAccessKeyId,
 	//	'AssociateTag' => '',
 		'Request' => $listLookupRequest,
-	);
+	];
 	
 	return $listLookup;
 }
@@ -187,33 +187,33 @@ function GetListLookupParams() {
 function GetListSearchParams() {
 	global $AWSAccessKeyId;
 
-	$listSearchRequest[] = array(
+	$listSearchRequest[] = [
 		'FirstName' => 'Scott',
 		'LastName' => 'Nichol',
 		'ListType' => 'WishList'
-	);
+	];
 	
-	$listSearch = array(
+	$listSearch = [
 		'AWSAccessKeyId' => $AWSAccessKeyId,
 	//	'AssociateTag' => '',
 		'Request' => $listSearchRequest,
-	);
+	];
 	
 	return $listSearch;
 }
 
 if ($method == 'ItemLookup') {
-	$result = $client->call('ItemLookup', array('body' => GetItemLookupParams()), '', '', GetHeaders('ItemLookup'));
+	$result = $client->call('ItemLookup', ['body' => GetItemLookupParams()], '', '', GetHeaders('ItemLookup'));
 } elseif ($method == 'ItemSearch') {
-	$result = $client->call('ItemSearch', array('body' => GetItemSearchParams()), '', '', GetHeaders('ItemSearch'));
+	$result = $client->call('ItemSearch', ['body' => GetItemSearchParams()], '', '', GetHeaders('ItemSearch'));
 } elseif ($method == 'ItemSearch2') {
-	$result = $client->call('ItemSearch', array('body' => GetItemSearchParams2()), '', '', GetHeaders('ItemSearch'));
+	$result = $client->call('ItemSearch', ['body' => GetItemSearchParams2()], '', '', GetHeaders('ItemSearch'));
 } elseif ($method == 'ListLookup') {
-	$result = $client->call('ListLookup', array('body' => GetListLookupParams()), '', '', GetHeaders('ListLookup'));
+	$result = $client->call('ListLookup', ['body' => GetListLookupParams()], '', '', GetHeaders('ListLookup'));
 } elseif ($method == 'ListSearch') {
-	$result = $client->call('ListSearch', array('body' => GetListSearchParams()), '', '', GetHeaders('ListSearch'));
+	$result = $client->call('ListSearch', ['body' => GetListSearchParams()], '', '', GetHeaders('ListSearch'));
 } elseif ($method == 'CartCreate') {
-	$result = $client->call('CartCreate', array('body' => GetCartCreateParams()), '', '', GetHeaders('CartCreate'));
+	$result = $client->call('CartCreate', ['body' => GetCartCreateParams()], '', '', GetHeaders('CartCreate'));
 } else {
 	echo "Unsupported method $method";
 	exit;

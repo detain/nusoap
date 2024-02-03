@@ -11,11 +11,11 @@
  */
 require_once('../lib/nusoap.php');
 require_once('../lib/class.wsdlcache.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 
 //echo 'You must set your own Via Michelin login and password in the source code to run this client!'; exit();
 $login = 'WSDEMO_01145';
@@ -48,15 +48,15 @@ if ($err) {
 	exit();
 }
 
-$inputAddresses[] = array(
+$inputAddresses[] = [
 	'address' => '45 Liberty Blvd.',
 	'cityName' => 'Malvern',
 	'countryCode' => 'USA',
 	'postalCode' => '19355',
 	'stateName' => 'PA'
-);
-$geocodingrequest = array('addressesList' => $inputAddresses);
-$params = array('request' => $geocodingrequest, 'check' => "$login|$password");
+];
+$geocodingrequest = ['addressesList' => $inputAddresses];
+$params = ['request' => $geocodingrequest, 'check' => "$login|$password"];
 $result = $client->call('getLocationsList', $params);
 
 // Check for a fault

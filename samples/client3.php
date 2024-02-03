@@ -10,11 +10,11 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 $client = new nusoap_client("http://api.google.com/search/beta2", false,
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
@@ -27,7 +27,7 @@ $client->setUseCurl($useCURL);
 $client->soap_defencoding = 'UTF-8';
 
 //echo 'You must set your own Google key in the source code to run this client!'; exit();
-$params = array(
+$params = [
 	'Googlekey'=>'Your Google key',
 	'queryStr'=>'robotics',
 	'startFrom'=>0,
@@ -38,7 +38,7 @@ $params = array(
 	'language'=>'',
 	'iencoding'=>'',
 	'oendcoding'=>''
-);
+];
 $result = $client->call("doGoogleSearch", $params, "urn:GoogleSearch", "urn:GoogleSearch");
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>'; print_r($result); echo '</pre>';

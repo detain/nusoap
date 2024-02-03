@@ -13,13 +13,13 @@ require_once('../lib/nusoap.php');
 /*
  *	Grab post vars, if present
  */
-$method = isset($_POST['method']) ? $_POST['method'] : '';
-$null = isset($_POST['null']) ? $_POST['null'] : '';
-$empty = isset($_POST['empty']) ? $_POST['empty'] : '';
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$method = $_POST['method'] ?? '';
+$null = $_POST['null'] ?? '';
+$empty = $_POST['empty'] ?? '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 /*
  *	When no method has been specified, give the user a choice
  */
@@ -53,84 +53,84 @@ if ($method == '') {
  */
 if ($method == 'echoString') {
 	if ($null != '1') {
-		$params = array('inputString' => 'If you cannot echo a string, you probably cannot do much');
+		$params = ['inputString' => 'If you cannot echo a string, you probably cannot do much'];
 	} else {
-		$params = array('inputString' => null);
+		$params = ['inputString' => null];
 	}
 } elseif ($method == 'echoStringArray') {
 	if ($null != '1') {
 		if ($empty != '1') {
-			$params = array('inputStringArray' => array('String 1', 'String 2', 'String Three'));
+			$params = ['inputStringArray' => ['String 1', 'String 2', 'String Three']];
 		} else {
-			$params = array('inputStringArray' => array());
+			$params = ['inputStringArray' => []];
 		}
 	} else {
-		$params = array('inputStringArray' => null);
+		$params = ['inputStringArray' => null];
 	}
 } elseif ($method == 'echoInteger') {
 	if ($null != '1') {
-		$params = array('inputInteger' => 329);
+		$params = ['inputInteger' => 329];
 	} else {
-		$params = array('inputInteger' => null);
+		$params = ['inputInteger' => null];
 	}
 } elseif ($method == 'echoIntegerArray') {
 	if ($null != '1') {
 		if ($empty != '1') {
-			$params = array('inputIntegerArray' => array(451, 43, -392220011, 1, 1, 2, 3, 5, 8, 13, 21));
+			$params = ['inputIntegerArray' => [451, 43, -392220011, 1, 1, 2, 3, 5, 8, 13, 21]];
 		} else {
-			$params = array('inputIntegerArray' => array());
+			$params = ['inputIntegerArray' => []];
 		}
 	} else {
-		$params = array('inputIntegerArray' => null);
+		$params = ['inputIntegerArray' => null];
 	}
 } elseif ($method == 'echoFloat') {
 	if ($null != '1') {
-		$params = array('inputFloat' => 3.14159265);
+		$params = ['inputFloat' => 3.14159265];
 	} else {
-		$params = array('inputFloat' => null);
+		$params = ['inputFloat' => null];
 	}
 } elseif ($method == 'echoFloatArray') {
 	if ($null != '1') {
 		if ($empty != '1') {
-			$params = array('inputFloatArray' => array(1.1, 2.2, 3.3, 1/4, -1/9));
+			$params = ['inputFloatArray' => [1.1, 2.2, 3.3, 1/4, -1/9]];
 		} else {
-			$params = array('inputFloatArray' => array());
+			$params = ['inputFloatArray' => []];
 		}
 	} else {
-		$params = array('inputFloatArray' => null);
+		$params = ['inputFloatArray' => null];
 	}
 } elseif ($method == 'echoStruct') {
 	if ($null != '1') {
-		$struct = array('varString' => 'who', 'varInt' => 2, 'varFloat' => 3.14159);
-		$params = array('inputStruct' => $struct);
+		$struct = ['varString' => 'who', 'varInt' => 2, 'varFloat' => 3.14159];
+		$params = ['inputStruct' => $struct];
 	} else {
-		$params = array('inputStruct' => null);
+		$params = ['inputStruct' => null];
 	}
 } elseif ($method == 'echoStructArray') {
 	if ($null != '1') {
 		if ($empty != '1') {
-			$structs[] = array('varString' => 'who', 'varInt' => 2, 'varFloat' => 3.14159);
-			$structs[] = array('varString' => 'when', 'varInt' => 4, 'varFloat' => 99.9876);
-			$params = array('inputStructArray' => $structs);
+			$structs[] = ['varString' => 'who', 'varInt' => 2, 'varFloat' => 3.14159];
+			$structs[] = ['varString' => 'when', 'varInt' => 4, 'varFloat' => 99.9876];
+			$params = ['inputStructArray' => $structs];
 		} else {
-			$params = array('inputStructArray' => array());
+			$params = ['inputStructArray' => []];
 		}
 	} else {
-		$params = array('inputStructArray' => null);
+		$params = ['inputStructArray' => null];
 	}
 } elseif ($method == 'echoVoid') {
-	$params = array();
+	$params = [];
 } elseif ($method == 'echoBoolean') {
 	if ($null != '1') {
-		$params = array('inputBoolean' => false);
+		$params = ['inputBoolean' => false];
 	} else {
-		$params = array('inputBoolean' => null);
+		$params = ['inputBoolean' => null];
 	}
 } elseif ($method == 'echoBase64') {
 	if ($null != '1') {
-		$params = array('inputBase64' => base64_encode('You must encode the data you send; NuSOAP will automatically decode the data it receives'));
+		$params = ['inputBase64' => base64_encode('You must encode the data you send; NuSOAP will automatically decode the data it receives')];
 	} else {
-		$params = array('inputBase64' => null);
+		$params = ['inputBase64' => null];
 	}
 } else {
 	echo 'Sorry, I do not know about method ' . $method;

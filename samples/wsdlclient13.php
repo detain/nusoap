@@ -10,10 +10,10 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 echo '<h2>Constructor</h2>';
 $client = new nusoap_client('http://www.scottnichol.com/samples/session.php?wsdl', true,
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
@@ -26,7 +26,7 @@ $client->clearDebug();
 // A persistent connection is *optional*, *not* necessary
 $client->useHTTPPersistentConnection();
 echo '<h2>GetSessionID</h2>';
-$result = $client->call('GetSessionID', array());
+$result = $client->call('GetSessionID', []);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';
@@ -50,7 +50,7 @@ echo '<h2>Response</h2><pre>' . htmlspecialchars($client->response, ENT_QUOTES) 
 echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->getDebug(), ENT_QUOTES) . '</pre>';
 $client->clearDebug();
 echo '<h2>SetSession</h2>';
-$result = $client->call('SetSession', array('name' => 'testvalue', 'value' => 'it works'));
+$result = $client->call('SetSession', ['name' => 'testvalue', 'value' => 'it works']);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';
@@ -74,7 +74,7 @@ echo '<h2>Response</h2><pre>' . htmlspecialchars($client->response, ENT_QUOTES) 
 echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->getDebug(), ENT_QUOTES) . '</pre>';
 $client->clearDebug();
 echo '<h2>GetSession</h2>';
-$result = $client->call('GetSession', array('name' => 'testvalue'));
+$result = $client->call('GetSession', ['name' => 'testvalue']);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

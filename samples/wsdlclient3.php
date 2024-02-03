@@ -10,18 +10,18 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 $client = new nusoap_client('http://www.scottnichol.com/samples/hellowsdl2.php?wsdl&debug=1', 'wsdl',
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
 if ($err) {
 	echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
 }
-$person = array('firstname' => 'Willi', 'age' => 22, 'gender' => 'male');
-$method = isset($_GET['method']) ? $_GET['method'] : 'function';
+$person = ['firstname' => 'Willi', 'age' => 22, 'gender' => 'male'];
+$method = $_GET['method'] ?? 'function';
 if ($method == 'function') {
 	$call = 'hello';
 } elseif ($method == 'instance') {
@@ -31,7 +31,7 @@ if ($method == 'function') {
 } else {
 	$call = 'hello';
 }
-$result = $client->call($call, array('person' => $person));
+$result = $client->call($call, ['person' => $person]);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

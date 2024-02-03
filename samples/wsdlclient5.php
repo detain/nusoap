@@ -11,11 +11,11 @@
  */
 require_once('../lib/nusoap.php');
 require_once('../lib/class.wsdlcache.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 
 $cache = new wsdlcache('.', 60);
 $wsdl = $cache->get('http://www.xmethods.net/sd/2001/BNQuoteService.wsdl');
@@ -42,7 +42,7 @@ if ($err) {
 	exit();
 }
 $client->setUseCurl($useCURL);
-$params = array('isbn' => '0060188782');
+$params = ['isbn' => '0060188782'];
 $result = $client->call('getPrice', $params);
 // Check for a fault
 if ($client->fault) {

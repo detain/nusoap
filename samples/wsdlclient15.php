@@ -10,11 +10,11 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 $client = new nusoap_client('http://www.scottnichol.com/samples/helloutf8.php?wsdl', 'wsdl',
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
@@ -27,8 +27,8 @@ if ($err) {
 $client->setUseCurl($useCURL);
 $client->soap_defencoding = 'UTF-8';
 $client->decode_utf8 = false;
-$client->setHeaders(array('Info1' => 'Data #1', 'Info2' => 'Data #2'));	// a test of setHeaders that does not change the behavior
-$utf8string = array('stuff' => "\xc2\xa9\xc2\xae\xc2\xbc\xc2\xbd\xc2\xbe");
+$client->setHeaders(['Info1' => 'Data #1', 'Info2' => 'Data #2']);	// a test of setHeaders that does not change the behavior
+$utf8string = ['stuff' => "\xc2\xa9\xc2\xae\xc2\xbc\xc2\xbd\xc2\xbe"];
 $result = $client->call('echoback', $utf8string);
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

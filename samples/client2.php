@@ -10,11 +10,11 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 $client = new nusoap_client("http://soap.amazon.com/onca/soap2", false,
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
@@ -25,21 +25,21 @@ if ($err) {
 }
 $client->setUseCurl($useCURL);
 $client->useHTTPPersistentConnection();
-$param = array(
+$param = [
     'manufacturer' => "O'Reilly",
     'page'         => '1',
     'mode'         => 'books',
     'tag'          => 'trachtenberg-20',
     'type'         => 'lite',
     'devtag'       => 'Your tag here'
-);
-$params = array('ManufacturerSearchRequest' =>
+];
+$params = ['ManufacturerSearchRequest' =>
 				new soapval('ManufacturerSearchRequest',
 				            'ManufacturerRequest',
 				            $param,
 				            false,
 				            'http://soap.amazon.com')
-				);
+				];
 $result = $client->call('ManufacturerSearchRequest', $params, 'http://soap.amazon.com', 'http://soap.amazon.com');
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>'; print_r($result); echo '</pre>';

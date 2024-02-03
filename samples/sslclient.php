@@ -10,17 +10,17 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 $client = new soapclient('https://arcweb.esri.com/services/v2/AddressFinder', false,
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
 if ($err) {
 	echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
 }
-$result = $client->call('getVersion', array(), 'http://arcweb.esri.com/v2', 'getVersion');
+$result = $client->call('getVersion', [], 'http://arcweb.esri.com/v2', 'getVersion');
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>'; print_r($result); echo '</pre>';
 } else {

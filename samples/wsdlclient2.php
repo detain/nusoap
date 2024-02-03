@@ -10,11 +10,11 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 
 $AWSAccessKeyId = 'Your AWS Access Key ID';
 $AWSSecretAccessKey = 'Your AWS Secret Access Key';
@@ -36,15 +36,15 @@ $proxy->setHeaders(
 	"<aws:Timestamp xmlns:aws=\"http://security.amazonaws.com/doc/2007-01-01/\">$timestamp</aws:Timestamp>\n" .
 	"<aws:Signature xmlns:aws=\"http://security.amazonaws.com/doc/2007-01-01/\">$signature</aws:Signature>"
 );
-$BrowseNodeLookupRequest[] = array(
+$BrowseNodeLookupRequest[] = [
 	'BrowseNodeId' => 18,
 //	'ResponseGroup' => 'whatever'
-);
-$BrowseNodeLookup = array(
+];
+$BrowseNodeLookup = [
 	'AWSAccessKeyId' => $AWSAccessKeyId,
 //	'AssociateTag' => '',
 	'Request' => $BrowseNodeLookupRequest
-);
+];
 $result = $proxy->BrowseNodeLookup($BrowseNodeLookup);
 // Check for a fault
 if ($proxy->fault) {

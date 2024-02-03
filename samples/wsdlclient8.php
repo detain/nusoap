@@ -10,10 +10,10 @@
  *	Authentication: digest
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 echo 'You must set your username and password in the source';
 exit();
 $client = new nusoap_client("http://staging.mappoint.net/standard-30/mappoint.wsdl", 'wsdl',
@@ -23,7 +23,7 @@ if ($err) {
 	echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
 }
 $client->setCredentials($username, $password, 'digest');
-$address = array(
+$address = [
 	'AddressLine' => '563 Park Avenue',
 	'PrimaryCity' => 'New York',
 	'SecondaryCity' => 'Brooklyn',
@@ -31,25 +31,25 @@ $address = array(
 	'PostalCode' => '',
 	'CountryRegion' => 'US',
 	'FormattedAddress' => ''
-);
-$findRange = array(
+];
+$findRange = [
 	'StartIndex' => 0,
 	'Count' => 10
-);
+];
 $findResultMask = 'AddressFlag';
-$findOptions = array(
+$findOptions = [
 	'Range' => $findRange,
 	'SearchContext' => 1,
 	'ResultMask' => $findResultMask,
 	'ThresholdScore' => 0.85
-);
-$findAddressSpecification = array(
+];
+$findAddressSpecification = [
 	'DataSourceName' => 'MapPoint.NA',
 	'InputAddress' => $address,
 	'Options' => $findOptions
-);
-$findAddress = array('specification' => $findAddressSpecification);
-$result = $client->call('FindAddress', array('parameters' => $findAddress));
+];
+$findAddress = ['specification' => $findAddressSpecification];
+$result = $client->call('FindAddress', ['parameters' => $findAddress]);
 // Check for a fault
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

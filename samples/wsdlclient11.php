@@ -12,11 +12,11 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 $client = new nusoap_client('http://www.scottnichol.com/samples/hellowsdl3.wsdl', 'wsdl',
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
@@ -27,8 +27,8 @@ if ($err) {
 	exit();
 }
 $client->setUseCurl($useCURL);
-$person = array('firstname' => 'Willi', 'age' => 22, 'gender' => 'male', 'any' => '<hobbies>surfing</hobbies>');
-$name = array('name' => $person);
+$person = ['firstname' => 'Willi', 'age' => 22, 'gender' => 'male', 'any' => '<hobbies>surfing</hobbies>'];
+$name = ['name' => $person];
 $result = $client->call('hello', $name);
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>';

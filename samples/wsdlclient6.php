@@ -10,10 +10,10 @@
  *	Authentication: none
  */
 require_once('../lib/nusoap.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
 echo 'You must change the source code to specify the location of the WSDL!'; exit();
 $client = new soapclient('file://f:/googleapi/GoogleSearch.wsdl', true,
 						$proxyhost, $proxyport, $proxyusername, $proxypassword);
@@ -35,11 +35,11 @@ $lr = '';
 $ie = '';
 $oe = '';
 
-$params = array(
+$params = [
 	'key' => $key, 'q' => $q, 'start' => $start, 'maxResults' => $maxResults,
 	'filter' => $filter, 'restrict' => $restrict, 'safeSearch' => $safeSearch, 'lr' => $lr,
 	'ie' => $ie, 'oe' => $oe
-	);
+	];
 
 $result = $client->call('doGoogleSearch', $params);
 // Check for a fault

@@ -11,11 +11,11 @@
  */
 require_once('../lib/nusoap.php');
 require_once('../lib/nusoapmime.php');
-$proxyhost = isset($_POST['proxyhost']) ? $_POST['proxyhost'] : '';
-$proxyport = isset($_POST['proxyport']) ? $_POST['proxyport'] : '';
-$proxyusername = isset($_POST['proxyusername']) ? $_POST['proxyusername'] : '';
-$proxypassword = isset($_POST['proxypassword']) ? $_POST['proxypassword'] : '';
-$useCURL = isset($_POST['usecurl']) ? $_POST['usecurl'] : '0';
+$proxyhost = $_POST['proxyhost'] ?? '';
+$proxyport = $_POST['proxyport'] ?? '';
+$proxyusername = $_POST['proxyusername'] ?? '';
+$proxypassword = $_POST['proxypassword'] ?? '';
+$useCURL = $_POST['usecurl'] ?? '0';
 $client = new nusoap_client_mime('http://www.scottnichol.com/samples/mimetest.php', false,
 							$proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
@@ -25,7 +25,7 @@ if ($err) {
 $client->setUseCurl($useCURL);
 $client->setHTTPEncoding('deflate, gzip');
 $cid = $client->addAttachment('', 'mimeclient.php');
-$result = $client->call('hello', array('name' => 'Scott'));
+$result = $client->call('hello', ['name' => 'Scott']);
 if ($client->fault) {
 	echo '<h2>Fault</h2><pre>'; print_r($result); echo '</pre>';
 } else {
