@@ -151,7 +151,7 @@ class wsdl2nusoap extends nusoap_base {
 		$this->debug('Enter loadWSDL');
 		if (is_null($this->wsdl)) {
 			$this->debug('instantiating wsdl class with doc: ' . $this->wsdlFile);
-			$this->wsdl =& new wsdl('', $this->options->proxyhost, $this->options->proxyport, $this->options->proxyusername, $this->options->proxypassword, $this->options->timeout, $this->options->response_timeout, $this->options->curl_options, $this->options->use_curl);
+			$this->wsdl = new wsdl('', $this->options->proxyhost, $this->options->proxyport, $this->options->proxyusername, $this->options->proxypassword, $this->options->timeout, $this->options->response_timeout, $this->options->curl_options, $this->options->use_curl);
 			$this->wsdl->setCredentials($this->options->username, $this->options->password, $this->options->authtype, $this->options->certRequest);
 			$this->wsdl->fetchWSDL($this->wsdlFile);
 			$this->appendDebug($this->wsdl->getDebug());
