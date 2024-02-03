@@ -16,10 +16,10 @@ $proxyusername = $_POST['proxyusername'] ?? '';
 $proxypassword = $_POST['proxypassword'] ?? '';
 echo 'You must change the source code to specify the location of the WSDL!'; exit();
 $client = new soapclient('file://f:/googleapi/GoogleSearch.wsdl', true,
-						$proxyhost, $proxyport, $proxyusername, $proxypassword);
+                        $proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
 if ($err) {
-	echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
+    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
 }
 $client->soap_defencoding = 'UTF-8';
 
@@ -36,31 +36,30 @@ $ie = '';
 $oe = '';
 
 $params = [
-	'key' => $key, 'q' => $q, 'start' => $start, 'maxResults' => $maxResults,
-	'filter' => $filter, 'restrict' => $restrict, 'safeSearch' => $safeSearch, 'lr' => $lr,
-	'ie' => $ie, 'oe' => $oe
-	];
+    'key' => $key, 'q' => $q, 'start' => $start, 'maxResults' => $maxResults,
+    'filter' => $filter, 'restrict' => $restrict, 'safeSearch' => $safeSearch, 'lr' => $lr,
+    'ie' => $ie, 'oe' => $oe
+    ];
 
 $result = $client->call('doGoogleSearch', $params);
 // Check for a fault
 if ($client->fault) {
-	echo '<h2>Fault</h2><pre>';
-	print_r($result);
-	echo '</pre>';
+    echo '<h2>Fault</h2><pre>';
+    print_r($result);
+    echo '</pre>';
 } else {
-	// Check for errors
-	$err = $client->getError();
-	if ($err) {
-		// Display the error
-		echo '<h2>Error</h2><pre>' . $err . '</pre>';
-	} else {
-		// Display the result
-		echo '<h2>Result</h2><pre>';
-		print_r($result);
-		echo '</pre>';
-	}
+    // Check for errors
+    $err = $client->getError();
+    if ($err) {
+        // Display the error
+        echo '<h2>Error</h2><pre>' . $err . '</pre>';
+    } else {
+        // Display the result
+        echo '<h2>Result</h2><pre>';
+        print_r($result);
+        echo '</pre>';
+    }
 }
 echo '<h2>Request</h2><pre>' . htmlspecialchars($client->request, ENT_QUOTES) . '</pre>';
 echo '<h2>Response</h2><pre>' . htmlspecialchars($client->response, ENT_QUOTES) . '</pre>';
 echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->debug_str, ENT_QUOTES) . '</pre>';
-?>

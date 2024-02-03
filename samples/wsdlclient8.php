@@ -17,58 +17,57 @@ $proxypassword = $_POST['proxypassword'] ?? '';
 echo 'You must set your username and password in the source';
 exit();
 $client = new nusoap_client("http://staging.mappoint.net/standard-30/mappoint.wsdl", 'wsdl',
-						$proxyhost, $proxyport, $proxyusername, $proxypassword);
+                        $proxyhost, $proxyport, $proxyusername, $proxypassword);
 $err = $client->getError();
 if ($err) {
-	echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
+    echo '<h2>Constructor error</h2><pre>' . $err . '</pre>';
 }
 $client->setCredentials($username, $password, 'digest');
 $address = [
-	'AddressLine' => '563 Park Avenue',
-	'PrimaryCity' => 'New York',
-	'SecondaryCity' => 'Brooklyn',
-	'Subdivision' => '',
-	'PostalCode' => '',
-	'CountryRegion' => 'US',
-	'FormattedAddress' => ''
+    'AddressLine' => '563 Park Avenue',
+    'PrimaryCity' => 'New York',
+    'SecondaryCity' => 'Brooklyn',
+    'Subdivision' => '',
+    'PostalCode' => '',
+    'CountryRegion' => 'US',
+    'FormattedAddress' => ''
 ];
 $findRange = [
-	'StartIndex' => 0,
-	'Count' => 10
+    'StartIndex' => 0,
+    'Count' => 10
 ];
 $findResultMask = 'AddressFlag';
 $findOptions = [
-	'Range' => $findRange,
-	'SearchContext' => 1,
-	'ResultMask' => $findResultMask,
-	'ThresholdScore' => 0.85
+    'Range' => $findRange,
+    'SearchContext' => 1,
+    'ResultMask' => $findResultMask,
+    'ThresholdScore' => 0.85
 ];
 $findAddressSpecification = [
-	'DataSourceName' => 'MapPoint.NA',
-	'InputAddress' => $address,
-	'Options' => $findOptions
+    'DataSourceName' => 'MapPoint.NA',
+    'InputAddress' => $address,
+    'Options' => $findOptions
 ];
 $findAddress = ['specification' => $findAddressSpecification];
 $result = $client->call('FindAddress', ['parameters' => $findAddress]);
 // Check for a fault
 if ($client->fault) {
-	echo '<h2>Fault</h2><pre>';
-	print_r($result);
-	echo '</pre>';
+    echo '<h2>Fault</h2><pre>';
+    print_r($result);
+    echo '</pre>';
 } else {
-	// Check for errors
-	$err = $client->getError();
-	if ($err) {
-		// Display the error
-		echo '<h2>Error</h2><pre>' . $err . '</pre>';
-	} else {
-		// Display the result
-		echo '<h2>Result</h2><pre>';
-		print_r($result);
-		echo '</pre>';
-	}
+    // Check for errors
+    $err = $client->getError();
+    if ($err) {
+        // Display the error
+        echo '<h2>Error</h2><pre>' . $err . '</pre>';
+    } else {
+        // Display the result
+        echo '<h2>Result</h2><pre>';
+        print_r($result);
+        echo '</pre>';
+    }
 }
 echo '<h2>Request</h2><pre>' . htmlspecialchars($client->request, ENT_QUOTES) . '</pre>';
 echo '<h2>Response</h2><pre>' . htmlspecialchars($client->response, ENT_QUOTES) . '</pre>';
 echo '<h2>Debug</h2><pre>' . htmlspecialchars($client->debug_str, ENT_QUOTES) . '</pre>';
-?>
