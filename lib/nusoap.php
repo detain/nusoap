@@ -3568,7 +3568,7 @@ class nusoap_server extends nusoap_base {
 	 */
 	var $xml_encoding = '';
 	/**
-	 * toggles whether the parser decodes element content w/ utf8_decode()
+	 * toggles whether the parser decodes element content w/ mb_convert_encoding()
 	 * @var boolean
 	 * @access public
 	 */
@@ -7146,7 +7146,7 @@ class nusoap_parser extends nusoap_base {
 			// raw UTF-8 that, e.g., might not map to iso-8859-1
 			// TODO: this can also be handled with xml_parser_set_option($this->parser, XML_OPTION_TARGET_ENCODING, "ISO-8859-1");
 			if($this->decode_utf8){
-				$data = utf8_decode($data);
+				$data = mb_convert_encoding($data, 'ISO-8859-1', 'UTF-8');
 			}
 		}
 		$this->message[$pos]['cdata'] .= $data;
@@ -7418,7 +7418,7 @@ class nusoap_client extends nusoap_base  {
 	var $response = '';				// HTTP response
 	var $responseData = '';			// SOAP payload of response
 	var $cookies = array();         // Cookies from response or for request
-	var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ utf8_decode()
+	var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ mb_convert_encoding()
 	var $operations = array();      // WSDL operations, empty for WSDL initialization error
 	var $curl_options = array();	// User-specified cURL options
 	var $bindingType = '';			// WSDL operation binding type

@@ -42,9 +42,9 @@ if ($client->fault) {
         echo '<h2>Result</h2><pre>';
         // Decode the result: it so happens we sent Latin-1 characters
         if (isset($result['return'])) {
-            $result1 = utf8_decode($result['return']);
+            $result1 = mb_convert_encoding($result['return'], 'ISO-8859-1', 'UTF-8');
         } elseif (!is_array($result)) {
-            $result1 = utf8_decode($result);
+            $result1 = mb_convert_encoding($result, 'ISO-8859-1', 'UTF-8');
         } else {
             $result1 = $result;
         }

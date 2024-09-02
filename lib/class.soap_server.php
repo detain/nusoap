@@ -81,7 +81,7 @@ class nusoap_server extends nusoap_base {
 	 */
 	var $xml_encoding = '';
 	/**
-	 * toggles whether the parser decodes element content w/ utf8_decode()
+	 * toggles whether the parser decodes element content w/ mb_convert_encoding()
 	 * @var boolean
 	 * @access public
 	 */

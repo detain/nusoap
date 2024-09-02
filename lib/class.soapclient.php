@@ -51,7 +51,7 @@ class nusoap_client extends nusoap_base  {
 	var $response = '';				// HTTP response
 	var $responseData = '';			// SOAP payload of response
 	var $cookies = array();			// Cookies from response or for request
-	var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ utf8_decode()
+	var $decode_utf8 = true;		// toggles whether the parser decodes element content w/ mb_convert_encoding()
 	var $operations = array();		// WSDL operations, empty for WSDL initialization error
 	var $curl_options = array();	// User-specified cURL options
 	var $bindingType = '';			// WSDL operation binding type
