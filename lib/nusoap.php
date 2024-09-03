@@ -3501,6 +3501,7 @@ class soap_transport_http extends nusoap_base {
 * @access   public
 */
 class nusoap_server extends nusoap_base {
+        var $opData;
 	/**
 	 * HTTP headers of request
 	 * @var array
@@ -4740,6 +4741,7 @@ class soap_server extends nusoap_server {
 * @access public
 */
 class wsdl extends nusoap_base {
+        var $serviceName;
 	// URL or filename of the root of this WSDL
 	var $wsdl;
 	// define internal arrays of bindings, ports, operations, messages, etc.
@@ -6737,7 +6739,7 @@ class wsdl extends nusoap_base {
 * @access   public
 */
 class nusoap_parser extends nusoap_base {
-
+        var $parser;
 	var $xml = '';
 	var $xml_encoding = '';
 	var $method = '';
