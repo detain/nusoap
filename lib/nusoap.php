@@ -6739,7 +6739,8 @@ class wsdl extends nusoap_base {
 * @access   public
 */
 class nusoap_parser extends nusoap_base {
-        var $parser;
+    var $methodNamespace;
+    var $parser;
 	var $xml = '';
 	var $xml_encoding = '';
 	var $method = '';
